@@ -82,7 +82,7 @@
               <span className="text-gray-800 mt-1 lg:mt-2 font-bold leading-snug block text-sm lg:text-base">{text}</span>
             </div>
             <div className="flex items-center gap-2 mt-4 text-[10px] lg:text-xs font-bold text-gray-500 uppercase bg-white/50 w-max px-2 py-1 rounded-md">
-              <i className="fas fa-eye w-3 h-3"></i> Análise de dados
+              <i className="fas fa-eye w-3 h-3"></i> Análise baseada em dados
             </div>
           </div>
 
@@ -103,26 +103,102 @@
     const InteractiveBarChart = () => {
       const [activeInsight, setActiveInsight] = useState(0);
       
-      // Dados super enriquecidos (Top 10 Global + Brasil) com métricas de investimento e contexto estratégico real.
       const data = [
-        { country: 'China', rank: '1º', display: '1.8M', width: '100%', color: 'bg-red-600', axes: ['IA Preditiva', 'Robótica'], insight: 'Apoiada pelo massivo plano "Healthy China 2030" (injetando US$ 1.2 Trilhão). A China emitiu mais de 40% das patentes globais de inteligência artificial médica e infraestrutura robótica nos últimos anos.', strategic: 'Consolidação de parcerias estatais com Big Techs asiáticas converte protótipos acadêmicos em produtos de linha de frente em meses.', source: 'OMPI/WIPO Report 2025', image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
-        { country: 'EUA', rank: '2º', display: '503 Mil', width: '35%', color: 'bg-blue-600', axes: ['Deep Tech', 'Genômica'], insight: 'Embora percam em volume para a China, os EUA lideram de forma absoluta em monetização e impacto clínico. Concentram cerca de 65% do Venture Capital mundial focado em biotecnologia molecular.', strategic: 'O ecossistema é dominado pelas Big Pharmas, que monitoram e adquirem inovações de Healthtechs já nas Fases 1 e 2 de testes do FDA.', source: 'USPTO / CB Insights 2025', image: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
-        { country: 'Japão', rank: '3º', display: '420 Mil', width: '28%', color: 'bg-gray-800', axes: ['Longevidade', 'Sensores'], insight: 'O Japão possui uma crise demográfica única (30% da população acima de 65 anos). O governo injetou mais de US$ 30Bi no plano "Sociedade 5.0" voltado unicamente para mitigar essa pressão no sistema.', strategic: 'A pauta nacional foca em manter idosos saudáveis em casa via biossensores integrados e robótica assistencial, esvaziando leitos do Estado.', source: 'Japan Patent Office (JPO)', image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
-        { country: 'Alemanha', rank: '4º', display: '310 Mil', width: '22%', color: 'bg-orange-500', axes: ['Aparelhos 3D', 'Indústria 4.0'], insight: 'Maior motor industrial da Europa. A Alemanha lidera patentes em engenharia de precisão aplicada à saúde, como super-ressonâncias magnéticas, válvulas ultraleves e biomanufatura.', strategic: 'Integração agressiva entre laboratórios de pesquisa (ex: Fraunhofer) e conglomerados industriais (ex: Siemens) para rápida escala global.', source: 'DPMA / OMPI 2025', image: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
-        { country: 'Coreia do Sul', rank: '5º', display: '260 Mil', width: '18%', color: 'bg-purple-600', axes: ['Chips Médicos', 'Óptica'], insight: 'Investe quase 5% do seu PIB em P&D global. O país utiliza sua supremacia mundial em semicondutores e telas de alta definição para dominar o diagnóstico por imagem avançada.', strategic: 'Mega-conglomerados (Chaebols como Samsung e LG) aplicam sua tecnologia de eletrônicos diretamente na saúde conectada (Wearables/IoMT).', source: 'KIPO / BioKorea 2025', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
-        { country: 'Índia', rank: '6º', display: '150 Mil', width: '15%', color: 'bg-emerald-500', axes: ['Biofármacos', 'Inov. Frugal'], insight: 'Historicamente a "farmácia do mundo" por seus genéricos (exportando US$ 50Bi/ano). O crescimento atual (+19.2% ao ano) marca a transição feroz do país para o desenvolvimento de moléculas originais e IA frugal.', strategic: 'Política "Make in India": o governo fornece fortes subsídios para forçar empresas locais a migrarem de "copiadoras" para "patenteadoras".', source: 'WIPO India Patents Bulletin', image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
-        { country: 'Suíça', rank: '7º', display: '115 Mil', width: '12%', color: 'bg-red-400', axes: ['Oncologia', 'Imunologia'], insight: 'Possui a maior densidade de patentes médicas de alto impacto financeiro per capita do mundo. Basileia e Genebra formam o principal hub da "Big Pharma" europeia (Novartis, Roche).', strategic: 'Foco quase exclusivo no alto da pirâmide de valor agregado, como terapias-alvo revolucionárias (ex: células CAR-T para oncologia e doenças raras).', source: 'Swiss IPI / Eurostat', image: 'https://images.unsplash.com/photo-1579165466741-7f35e4755660?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
-        { country: 'França', rank: '8º', display: '95 Mil', width: '10%', color: 'bg-blue-400', axes: ['Telemedicina', 'Oncologia'], insight: 'O agressivo plano de Estado "France 2030" alocou € 7.5 Bilhões em financiamento soberano focados unicamente na revolução do setor de saúde e biologia.', strategic: 'A França usa o fundo público "Bpifrance" para turbinar o financiamento em deep techs, mantendo a propriedade intelectual dentro das fronteiras da UE.', source: 'INPI France 2025', image: 'https://images.unsplash.com/photo-1584308666744-24d5e4a520ed?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
-        { country: 'Reino Unido', rank: '9º', display: '85 Mil', width: '8%', color: 'bg-indigo-600', axes: ['Genômica', 'Dados / IA'], insight: 'O Serviço Nacional de Saúde (NHS) atende mais de 65 milhões de pessoas. Essa é a maior e mais unificada base de dados demográficos reais e longitudinais do planeta livre.', strategic: 'O governo "abre" (sob anonimato) dados do NHS para treinar os algoritmos de IA de Big Techs, atraindo as sedes das melhores HealthTechs do mundo (ex: DeepMind).', source: 'UKIPO / NHS Digital', image: 'https://images.unsplash.com/photo-1532187643603-c76088e5e6e6?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
-        { country: 'Israel', rank: '10º', display: '70 Mil', width: '6%', color: 'bg-cyan-500', axes: ['Cyber-Saúde', 'Algoritmos'], insight: 'Reconhecida globalmente como a "Startup Nation", Israel tem a maior densidade global de HealthTechs baseadas em sofisticação de software per capita.', strategic: 'Genialidade em "spin-offs" militares: as mesmas tecnologias (visão computacional, IA, cibersegurança) usadas nas forças armadas são convertidas por ex-militares em diagnósticos médicos precisos.', source: 'Israel Innovation Authority', image: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
-        { country: 'Brasil', rank: '24º', display: '31 Mil', width: '4%', color: 'bg-yellow-500', axes: ['Biodiversidade', 'Pesquisa'], insight: 'A posição reflete um grande mercado consumidor, mas de baixa autonomia: 67% das patentes aplicadas aqui são de matrizes estrangeiras visando lucro no SUS.', strategic: 'O "gap" nacional é financeiro. O Brasil tem biólogos de excelência e a maior biodiversidade do mundo, mas falha em tracionar Fundos de Risco (VCs) para escalar a pesquisa universitária à indústria.', source: 'INPI - Indicadores 2024/25', image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { 
+          country: 'China', rank: '1º', display: '1.8M', width: '100%', color: 'bg-red-600', axes: ['IA Preditiva', 'Robótica'], 
+          insight: 'O plano "Healthy China 2030" injetou US$ 1.2 Trilhão. A China emitiu 45% das patentes globais de IA médica e infraestrutura robótica 5G nos últimos anos.', 
+          strategic: 'Parcerias estatais com Big Techs asiáticas convertem protótipos acadêmicos em produtos de linha em meses.', 
+          caseTitle: 'IA Generativa "Pangu-Bio" (Tencent/BGI)', 
+          caseDesc: 'Modelos de Deep Learning processando bancos de dados genômicos populacionais em escala para prever doenças com anos de antecedência, acoplados aos robôs de telemedicina em 5G.',
+          source: 'OMPI/WIPO Report 2025 | Nature', image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=80', imgCaption: '[Laboratório Chinês 5G]' 
+        },
+        { 
+          country: 'EUA', rank: '2º', display: '503 Mil', width: '35%', color: 'bg-blue-600', axes: ['Deep Tech', 'Genômica'], 
+          insight: 'Os EUA lideram de forma absoluta em monetização. Concentram 65% do Venture Capital mundial focado em biotecnologia molecular.', 
+          strategic: 'Ecossistema dominado por Big Pharmas que compram Healthtechs nas primeiras fases do FDA.', 
+          caseTitle: 'Edição Genética in vivo (CRISPR)', 
+          caseDesc: 'Pela primeira vez na história (projeto da Intellia Therapeutics), a tecnologia CRISPR foi injetada diretamente na corrente sanguínea de pacientes para editar o DNA defeituoso no fígado, curando amiloidose.',
+          source: 'USPTO / NEJM Clinical Trials', image: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=500&q=80', imgCaption: '[Sequenciamento Genético]' 
+        },
+        { 
+          country: 'Japão', rank: '3º', display: '420 Mil', width: '28%', color: 'bg-gray-800', axes: ['Longevidade', 'Sensores'], 
+          insight: 'Com 30% da população acima de 65 anos, o governo japonês injetou US$ 30Bi no plano "Sociedade 5.0".', 
+          strategic: 'Manter idosos saudáveis em casa via biossensores integrados e robótica assistencial, esvaziando leitos do Estado.', 
+          caseTitle: 'Traje Robótico Bioelétrico (HAL)', 
+          caseDesc: 'O exoesqueleto robótico HAL (Cyberdyne) lê os tênues sinais bioelétricos na pele do paciente e antecipa o movimento, revolucionando a reabilitação de vítimas de AVC e lesões na medula espinhal.',
+          source: 'Japan Patent Office / RIKEN', image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=500&q=80', imgCaption: '[Sensores e Exoesqueletos]' 
+        },
+        { 
+          country: 'Alemanha', rank: '4º', display: '310 Mil', width: '22%', color: 'bg-orange-500', axes: ['Material 3D', 'Biotec'], 
+          insight: 'Maior motor industrial da Europa, a Alemanha domina as patentes em engenharia pesada aplicada à saúde e biofármacos.', 
+          strategic: 'Integração agressiva entre grandes laboratórios (Fraunhofer) e conglomerados (Siemens).', 
+          caseTitle: 'Vacinas Oncológicas de RNAm', 
+          caseDesc: 'Pós-pandemia, a BioNTech reprogramou a tecnologia de RNAm para criar "vacinas personalizadas" que instruem o sistema imune do paciente a caçar e destruir tumores específicos de melanoma e câncer de pâncreas.',
+          source: 'DPMA / Nature Medicine', image: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=500&q=80', imgCaption: '[Engenharia Biomédica Alemã]' 
+        },
+        { 
+          country: 'Coreia do Sul', rank: '5º', display: '260 Mil', width: '18%', color: 'bg-purple-600', axes: ['Chips', 'Óptica IA'], 
+          insight: 'Investindo quase 5% do PIB em P&D, utilizam sua supremacia mundial em semicondutores e telas de alta definição para dominar o diagnóstico por imagem.', 
+          strategic: 'Mega-conglomerados (Samsung, LG) aplicam sua tecnologia eletrônica na saúde conectada (IoMT).', 
+          caseTitle: 'Visão Computacional Lunit INSIGHT', 
+          caseDesc: 'Software de inteligência artificial profunda aprovado em mais de 40 países. Ele detecta micro-cânceres em mamografias com precisão até 20% superior à de radiologistas veteranos, evitando falsos negativos.',
+          source: 'KIPO / Lancet Oncology', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80', imgCaption: '[Microchips e Visão Computacional]' 
+        },
+        { 
+          country: 'Índia', rank: '6º', display: '150 Mil', width: '15%', color: 'bg-emerald-500', axes: ['Frugal', 'Biofármacos'], 
+          insight: 'A "farmácia do mundo" (exportando US$ 50Bi/ano em genéricos) vive transição vertiginosa (+19% de patentes ao ano).', 
+          strategic: 'Política "Make in India": forçar a indústria a migrar da manufatura barata para as patentes e inovações originais.', 
+          caseTitle: 'Diagnóstico de Papel Frugal (Feluda)', 
+          caseDesc: 'Pesquisadores indianos adaptaram a poderosa tesoura genética CRISPR em um teste de papel (estilo teste de gravidez) que diagnostica patógenos infecciosos com precisão de PCR, mas custando apenas US$ 6.',
+          source: 'WIPO India / CSIR India', image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=500&q=80', imgCaption: '[Indústria Farmacêutica Indiana]' 
+        },
+        { 
+          country: 'Suíça', rank: '7º', display: '115 Mil', width: '12%', color: 'bg-red-400', axes: ['Oncologia', 'Imunologia'], 
+          insight: 'Maior densidade de patentes financeiramente valiosas per capita do mundo. Basileia forma o hub da "Big Pharma" (Novartis, Roche).', 
+          strategic: 'Foco exclusivo em terapias-alvo revolucionárias e hipercomplexas de altíssimo valor de mercado.', 
+          caseTitle: 'Terapia Celular CAR-T (Kymriah)', 
+          caseDesc: 'Reprogramação genética em laboratório dos linfócitos T (glóbulos brancos) do próprio paciente, devolvendo-os ao sangue transformados em verdadeiros "assassinos seriais" desenhados para destruir a leucemia.',
+          source: 'Swissmedic / EMA', image: 'https://images.unsplash.com/photo-1579165466741-7f35e4755660?auto=format&fit=crop&w=500&q=80', imgCaption: '[Pesquisa de ponta na Suíça]' 
+        },
+        { 
+          country: 'França', rank: '8º', display: '95 Mil', width: '10%', color: 'bg-blue-400', axes: ['Robótica', 'Biossintéticos'], 
+          insight: 'O plano de Estado "France 2030" alocou € 7.5 Bilhões em financiamento soberano focados na revolução do setor da biologia.', 
+          strategic: 'O fundo público Bpifrance turbina deep techs e blinda a propriedade intelectual na UE.', 
+          caseTitle: 'Coração Total Artificial Aeson (Carmat)', 
+          caseDesc: 'O coração biônico mais autônomo da história médica. Revestido internamente com tecidos bovinos e operado por sensores aeroespaciais para evitar trombose e mimetizar a resposta do pulso ao esforço físico.',
+          source: 'INPI France / Bpifrance', image: 'https://images.unsplash.com/photo-1584308666744-24d5e4a520ed?auto=format&fit=crop&w=500&q=80', imgCaption: '[Coração e válvulas artificiais]' 
+        },
+        { 
+          country: 'Reino Unido', rank: '9º', display: '85 Mil', width: '8%', color: 'bg-indigo-600', axes: ['Genômica', 'Dados / IA'], 
+          insight: 'O Sistema Público (NHS) atende 65 milhões de pessoas: a maior e mais unificada base de dados longitudinais do planeta livre.', 
+          strategic: 'Governo cede dados anônimos maciços para treinar IA de Big Techs (ex: DeepMind), liderando descobertas.', 
+          caseTitle: 'The 100,000 Genomes Project', 
+          caseDesc: 'Cruzamento inédito do gigantesco banco de dados do NHS com IA avançada. Identificou mutações ocultas, curando doenças raras e detectando alvos de câncer populacional em uma escala jamais vista na medicina pública.',
+          source: 'UKIPO / Genomics England', image: 'https://images.unsplash.com/photo-1532187643603-c76088e5e6e6?auto=format&fit=crop&w=500&q=80', imgCaption: '[Genômica de escala e Big Data]' 
+        },
+        { 
+          country: 'Israel', rank: '10º', display: '70 Mil', width: '6%', color: 'bg-cyan-500', axes: ['Cyber-Saúde', 'Algoritmos'], 
+          insight: 'A "Startup Nation" tem a maior densidade global de HealthTechs baseadas em software sofisticado per capita.', 
+          strategic: 'Efeito Spin-off Militar: As tecnologias de cibersegurança e visão do exército viram diagnósticos médicos via IA.', 
+          caseTitle: 'Plataforma de Triagem IA (Aidoc)', 
+          caseDesc: 'IA conectada aos tomógrafos hospitalares. Ela analisa varreduras em tempo real de forma ininterrupta e "grita" na tela do médico caso detecte sinais de AVC ou hemorragias cerebrais, antes da triagem humana.',
+          source: 'Israel Innovation Authority', image: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&w=500&q=80', imgCaption: '[Ciber-saúde e Algoritmos Preditivos]' 
+        },
+        { 
+          country: 'Brasil', rank: '24º', display: '31 Mil', width: '4%', color: 'bg-yellow-500', axes: ['Biodiversidade', 'Vacinas'], 
+          insight: 'Uma das maiores economias do mundo com um gap severo na esteira de hardware (67% das patentes aplicadas aqui são de estrangeiras).', 
+          strategic: 'A grande oportunidade reside no uso da vasta biodiversidade atrelada às excelentes Universidades Federais.', 
+          caseTitle: 'Peptídeos do Marimbondo (Alzheimer)', 
+          caseDesc: 'Químicos brasileiros isolaram peptídeos ativos na peçonha do marimbondo tropical "Polybia paulista". Nos ensaios, eles barram vigorosamente a agregação das proteínas tóxicas (tau) que causam a morte neuronal no Alzheimer.',
+          source: 'INPI Brasil / UNESP / Santa Casa', image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=500&q=80', imgCaption: '[Biodiversidade e Química Fina]' 
+        },
       ];
 
       return (
         <div className="flex flex-col lg:flex-row h-full gap-5 lg:gap-8 flex-1">
           {/* Coluna Esquerda - Gráfico de Barras Top 10 + Brasil */}
-          <div className="w-full lg:w-4/12 flex flex-col gap-2 border-b lg:border-b-0 lg:border-r border-gray-200 pb-4 lg:pb-0 lg:pr-6 shrink-0 h-[250px] lg:h-auto">
-            <div className="mb-2"><InteractiveHint text="Passe o cursor sobre a lista global" /></div>
+          <div className="w-full lg:w-4/12 flex flex-col gap-2 border-b lg:border-b-0 lg:border-r border-gray-200 pb-4 lg:pb-0 lg:pr-6 shrink-0 h-[280px] lg:h-auto">
+            <div className="mb-2"><InteractiveHint text="Passe o cursor sobre os países e descubra o Projeto (Lastro) que define o ranking" /></div>
             <div className="flex-1 flex flex-col gap-1 overflow-y-auto custom-scrollbar pr-2">
               {data.map((item, index) => (
                 <div key={item.country} className="group cursor-pointer relative" onMouseEnter={() => setActiveInsight(index)}>
@@ -164,15 +240,19 @@
 
             <div className="flex flex-col lg:flex-row gap-6 flex-1 overflow-y-auto custom-scrollbar pr-2">
               <div className="flex flex-col gap-4 flex-1">
+                
                 <p className="text-gray-300 text-xs lg:text-sm leading-relaxed font-medium">
-                  <strong className="text-white block mb-2 uppercase text-[10px] tracking-widest">O Fundo Macroeconômico:</strong>
-                  {data[activeInsight].insight}
+                  <strong className="text-gray-400 block mb-1 uppercase text-[9px] tracking-widest border-b border-gray-700 pb-1">Fundamento Macroeconômico:</strong>
+                  {data[activeInsight].insight} <span className="italic text-gray-500">{data[activeInsight].strategic}</span>
                 </p>
                 
-                <div className="bg-gradient-to-r from-gray-800/80 to-gray-800/20 p-4 lg:p-5 rounded-2xl border-l-4 border-blue-500 mt-auto shadow-inner">
-                  <div className="text-[10px] lg:text-xs text-blue-300 font-black uppercase tracking-widest mb-2 flex items-center gap-2"><i className="fas fa-chess-knight"></i> Estratégia de Estado / Mercado</div>
-                  <p className="text-xs lg:text-sm text-gray-100 leading-relaxed font-medium">{data[activeInsight].strategic}</p>
+                {/* DESTAQUE DO CASE COMPROVADO E DA FONTE */}
+                <div className="bg-gradient-to-r from-blue-900/40 to-transparent p-4 lg:p-5 rounded-xl border-l-4 border-amber-400 mt-auto shadow-sm">
+                  <span className="text-[10px] text-amber-400 font-bold uppercase tracking-widest block mb-2 flex items-center gap-1.5"><i className="fas fa-flask"></i> Case de Sucesso (Lastro)</span>
+                  <h5 className="text-white font-black text-sm lg:text-base mb-1.5">{data[activeInsight].caseTitle}</h5>
+                  <p className="text-gray-300 text-[11px] lg:text-xs leading-relaxed font-medium">{data[activeInsight].caseDesc}</p>
                 </div>
+
               </div>
               
               <div className="flex flex-col w-full lg:w-5/12 shrink-0">
@@ -202,7 +282,7 @@
       ];
       return (
         <div className="flex flex-col h-full flex-1">
-           <div className="mb-4 shrink-0"><InteractiveHint text="Navegue na lista para verificar o lastro tecnológico da vanguarda hospitalar" /></div>
+           <div className="mb-4 shrink-0"><InteractiveHint text="Selecione as instituições para verificar o lastro da excelência no Top Global" /></div>
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 flex-1 overflow-hidden">
             
             {/* Menu Lateral Hospitais */}
@@ -226,7 +306,7 @@
             </div>
 
             {/* Deep Dive Hospitais */}
-            <div className="w-full lg:w-8/12 bg-white border border-gray-200 p-6 lg:p-8 rounded-3xl flex flex-col relative overflow-hidden min-h-[400px] shadow-xl">
+            <div className="w-full lg:w-7/12 bg-white border border-gray-200 p-6 lg:p-8 rounded-3xl flex flex-col relative overflow-hidden min-h-[400px] shadow-lg">
               {hospitals.filter(h => h.rank === selectedRank).map(active => (
                 <div key={active.rank} className="relative z-10 flex flex-col h-full overflow-y-auto custom-scrollbar pr-2 animate-fade-in">
                   <div className="flex justify-between items-start mb-6 shrink-0 border-b border-gray-100 pb-5">
@@ -248,7 +328,7 @@
                     </div>
                   </div>
                   <div className="shrink-0 mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <span className="text-[10px] text-gray-400 italic block">{active.imgCaption}</span>
+                    <span className="text-[9px] text-gray-400 italic block">{active.imgCaption}</span>
                     <SourceBadge source={active.source} />
                   </div>
                 </div>
@@ -369,6 +449,7 @@
               <div>
                 <div className="flex items-baseline gap-2"><div className="text-3xl lg:text-5xl font-black text-red-600 mb-1 tracking-tighter leading-none">67.9%</div></div>
                 <div className="font-bold text-gray-800 uppercase tracking-widest text-[10px] lg:text-xs mt-1">Patentes Estrangeiras</div>
+                <div className="text-[10px] text-gray-500 mt-1 font-medium bg-red-100 w-max px-2 py-0.5 rounded text-red-800">21.073 Registros</div>
               </div>
               <i className={`fas fa-globe-americas text-4xl lg:text-6xl ${hoverArea === 'foreign' ? 'text-red-300' : 'text-gray-200'}`}></i>
             </button>
@@ -377,6 +458,7 @@
               <div>
                 <div className="flex items-baseline gap-2"><div className="text-3xl lg:text-5xl font-black text-blue-600 mb-1 tracking-tighter leading-none">32.1%</div></div>
                 <div className="font-bold text-gray-800 uppercase tracking-widest text-[10px] lg:text-xs mt-1">Pesquisa Nacional</div>
+                <div className="text-[10px] text-gray-500 mt-1 font-medium bg-blue-100 w-max px-2 py-0.5 rounded text-blue-800">9.963 Registros</div>
               </div>
               <i className={`fas fa-university text-4xl lg:text-6xl ${hoverArea === 'domestic' ? 'text-blue-300' : 'text-gray-200'}`}></i>
             </button>
@@ -404,7 +486,7 @@
 
                 <div className={`p-5 rounded-2xl border-l-4 bg-black/50 backdrop-blur-sm ${hoverArea === 'foreign' ? 'border-red-500' : 'border-blue-500'}`}>
                   <span className="block text-[10px] font-black uppercase tracking-widest mb-2 text-gray-400"><i className="fas fa-lightbulb mr-1 text-amber-400"></i> Diagnóstico de Estado</span>
-                  <p className="text-sm lg:text-base text-gray-100 font-medium leading-relaxed">{activeData.action}</p>
+                  <p className="text-sm lg:text-base text-white font-medium leading-relaxed">{activeData.action}</p>
                 </div>
               </div>
               <div className="mt-5 shrink-0"><SourceBadge source={activeData.source} dark={true} /></div>
@@ -414,7 +496,7 @@
                <div className="flex-1 rounded-2xl overflow-hidden border border-gray-700 bg-black shadow-lg">
                   <img src={activeData.image} alt={activeData.imgCaption} className="w-full h-full object-cover opacity-50 hover:opacity-100 transition-opacity duration-700 ease-in-out" />
                </div>
-               <span className="text-[9px] text-gray-500 italic mt-3 text-center bg-gray-800 p-2 rounded-lg font-medium">{activeData.imgCaption}</span>
+               <span className="text-[10px] text-gray-500 italic mt-3 text-center block bg-gray-800/50 p-1.5 rounded border border-gray-700">{activeData.imgCaption}</span>
             </div>
             
             <i className={`fas fa-chart-pie absolute -bottom-16 -right-16 text-[300px] opacity-[0.03] pointer-events-none z-0 ${hoverArea === 'foreign' ? 'text-red-500' : 'text-blue-500'}`}></i>
@@ -652,8 +734,8 @@
                     </div>
                     <h2 className="text-xl sm:text-2xl lg:text-4xl font-black text-gray-900 tracking-tighter uppercase truncate leading-none mt-1">{slides[currentSlide].headerTitle}</h2>
                  </div>
-                 <div className="text-[10px] lg:text-xs font-black text-gray-400 bg-gray-50 px-4 py-2 rounded-full uppercase tracking-widest hidden sm:flex items-center gap-2 shrink-0 border border-gray-200 shadow-inner">
-                    <i className="fas fa-folder-open text-gray-400"></i> Painel de Análise {currentSlide + 1} de {slides.length}
+                 <div className="text-[10px] lg:text-xs font-black text-gray-500 bg-gray-50 px-4 py-2 rounded-full uppercase tracking-widest hidden sm:flex items-center gap-2 shrink-0 border border-gray-200 shadow-inner">
+                    <i className="fas fa-folder-open text-blue-400"></i> Painel de Análise {currentSlide + 1} de {slides.length}
                  </div>
                </>
              )}
@@ -661,7 +743,7 @@
 
           {/* ÁREA DE SLIDER CENTRAL */}
           <div className="flex-1 relative bg-white overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-full flex transition-transform duration-[800ms] ease-[cubic-bezier(0.87,0,0.13,1)]" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+            <div className="absolute top-0 left-0 w-full h-full flex transition-transform duration-[700ms] ease-[cubic-bezier(0.87,0,0.13,1)]" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
               {slides.map((slide) => (
                 <div key={slide.id} className="min-w-full h-full bg-white">
                   {slide.render()}
@@ -678,17 +760,17 @@
                 {slides.map((_, i) => (
                   <button 
                     key={i} onClick={() => setCurrentSlide(i)} aria-label={`Ir para Painel ${i + 1}`}
-                    className={`h-2 lg:h-3 transition-all duration-500 rounded-full ${currentSlide === i ? 'w-10 lg:w-14 bg-blue-600 shadow-md' : 'w-2 lg:w-3 bg-gray-300 hover:bg-gray-400'}`}
+                    className={`h-2 lg:h-2.5 transition-all duration-300 rounded-full ${currentSlide === i ? 'w-8 lg:w-12 bg-blue-600 shadow-md' : 'w-2 lg:w-2.5 bg-gray-300 hover:bg-gray-400'}`}
                   ></button>
                 ))}
               </div>
             </div>
             
             <div className="flex gap-3 lg:gap-4">
-              <button onClick={prevSlide} className="px-5 lg:px-8 py-2.5 lg:py-3 flex items-center gap-2 rounded-xl font-bold text-xs lg:text-sm bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm focus:ring-4 focus:ring-gray-100">
+              <button onClick={prevSlide} className="px-4 lg:px-6 py-2.5 lg:py-3 flex items-center gap-2 rounded-xl font-bold text-xs lg:text-sm bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm focus:ring-4 focus:ring-gray-100">
                 <i className="fas fa-arrow-left"></i> <span className="hidden sm:inline uppercase tracking-widest text-[10px] lg:text-xs">Anterior</span>
               </button>
-              <button onClick={nextSlide} className="px-5 lg:px-8 py-2.5 lg:py-3 flex items-center gap-2 rounded-xl font-black text-xs lg:text-sm bg-black border-2 border-black text-white hover:bg-gray-800 transition-all shadow-xl hover:shadow-black/20 focus:ring-4 focus:ring-gray-300">
+              <button onClick={nextSlide} className="px-4 lg:px-6 py-2.5 lg:py-3 flex items-center gap-2 rounded-xl font-black text-xs lg:text-sm bg-black border-2 border-black text-white hover:bg-gray-800 transition-all shadow-xl hover:shadow-black/20 focus:ring-4 focus:ring-gray-300">
                 <span className="hidden sm:inline uppercase tracking-widest text-[10px] lg:text-xs">Avançar Estudo</span> <i className="fas fa-arrow-right"></i>
               </button>
             </div>
