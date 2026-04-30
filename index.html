@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dossiê Inovação em Saúde</title>
+  <title>Dossiê Analítico: Inovação em Saúde 2026</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -22,10 +22,14 @@
     body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 0; }
     @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    
+    /* Scrollbar minimalista */
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(156, 163, 175, 0.5); border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(156, 163, 175, 0.4); border-radius: 10px; }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: rgba(107, 114, 128, 0.8); }
+    
+    /* Máscara de gradiente para imagens */
     .mask-image-b-gradient { 
         mask-image: linear-gradient(to bottom, black 0%, transparent 100%); 
         -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%); 
@@ -39,9 +43,11 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    // --- COMPONENTES DE BASE ---
+    // ==========================================
+    // COMPONENTES DE BASE DE DESIGN
+    // ==========================================
     const SlideContainer = ({ children, bg = "bg-white" }) => (
-      <div className={`min-w-full h-full overflow-y-auto custom-scrollbar flex flex-col p-6 lg:p-10 box-border ${bg}`}>
+      <div className={`min-w-full h-full overflow-y-auto custom-scrollbar flex flex-col p-5 lg:p-10 box-border ${bg}`}>
         <div className="flex flex-col min-h-full pb-4">
           {children}
         </div>
@@ -49,15 +55,15 @@
     );
 
     const InteractiveHint = ({ text }) => (
-      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold rounded-full uppercase tracking-wider mb-2">
-        <i className="fas fa-hand-pointer w-4 h-4"></i>
+      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold rounded-full uppercase tracking-wider mb-3">
+        <i className="fas fa-hand-pointer w-3 h-3 animate-pulse"></i>
         {text}
       </div>
     );
 
     const SourceBadge = ({ source, dark = false }) => (
-      <div className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded border mt-1 ${dark ? 'text-gray-400 bg-gray-900/50 border-gray-700' : 'text-gray-400 bg-white/10 border-gray-200/20'}`}>
-        <i className="fas fa-book-open w-3 h-3"></i> Fonte: {source}
+      <div className={`inline-flex items-center gap-1.5 text-[9px] lg:text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded border mt-1 ${dark ? 'text-gray-400 bg-gray-900/50 border-gray-700' : 'text-gray-500 bg-white/50 border-gray-300'}`}>
+        <i className="fas fa-book-open w-3 h-3"></i> {source}
       </div>
     );
 
@@ -75,262 +81,174 @@
               <span className={`text-3xl lg:text-5xl font-black tracking-tighter ${color} block`}>{number}</span>
               <span className="text-gray-800 mt-1 lg:mt-2 font-bold leading-snug block text-sm lg:text-base">{text}</span>
             </div>
-            <div className="flex items-center gap-2 mt-4 text-[10px] lg:text-xs font-bold text-gray-500 uppercase">
-              <i className="fas fa-eye w-3 h-3"></i> Passe o mouse
+            <div className="flex items-center gap-2 mt-4 text-[10px] lg:text-xs font-bold text-gray-500 uppercase bg-white/50 w-max px-2 py-1 rounded-md">
+              <i className="fas fa-eye w-3 h-3"></i> Análise de dados
             </div>
           </div>
 
           <div className={`absolute inset-0 p-5 lg:p-6 bg-gray-900 text-white transition-all duration-500 flex flex-col justify-between ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full z-[-1]'}`}>
             <div className="overflow-y-auto custom-scrollbar pr-2">
-              <h4 className="text-xs lg:text-sm font-bold text-blue-400 uppercase tracking-widest mb-2">Insight Estratégico</h4>
-              <p className="text-xs lg:text-sm leading-relaxed text-gray-200">{insightDetail}</p>
+              <h4 className="text-[10px] lg:text-xs font-bold text-blue-400 uppercase tracking-widest mb-2 border-b border-gray-700 pb-1">Evidência Estratégica</h4>
+              <p className="text-xs lg:text-sm leading-relaxed text-gray-200 mt-2">{insightDetail}</p>
             </div>
-            <div className="mt-2 shrink-0"><SourceBadge source={source} /></div>
+            <div className="mt-2 shrink-0"><SourceBadge source={source} dark={true} /></div>
           </div>
         </div>
       );
     };
 
-    // --- FRONTEIRAS DA MEDICINA (Inovações Disruptivas) ---
-    const DisruptiveInnovations = () => {
-      const [activeInv, setActiveInv] = useState(0);
-
-      const innovations = [
-        {
-          id: 1, title: "Mapeamento de Veias", shortDesc: "O fim da agulha na veia errada", iconClass: "fas fa-qrcode", category: "Procedimento Guiado", country: "Global",
-          description: "Uma tecnologia de realidade aumentada projeta um mapa exato e brilhante das veias diretamente na pele do paciente em tempo real utilizando luz infravermelha próxima, criando um contraste visual imediato.",
-          institution: "StartSe Radar / HealthTechs", source: "Realidade Aumentada Médica",
-          image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80", imgCaption: "[Mapeamento vascular com fluorescência]"
-        },
-        {
-          id: 2, title: "Implante Cerebral Wireless", shortDesc: "Tratamento para depressão", iconClass: "fas fa-brain", category: "Neurotecnologia", country: "EUA",
-          description: "Aprovado para testes clínicos pelo FDA, o dispositivo DOT é um implante sem fio posicionado acima do cérebro (não perfura o tecido). Ele modula a atividade cerebral de forma precisa com estimulação elétrica.",
-          institution: "FDA / Radar Martha Gabriel", source: "Interesting Engineering",
-          image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80", imgCaption: "[Implante cerebral sem fio]"
-        },
-        {
-          id: 3, title: "Coração de Espinafre", shortDesc: "Folhas vegetais viram tecido humano", iconClass: "fas fa-leaf", category: "Engenharia de Tecidos", country: "Global",
-          description: "Cientistas cultivaram tecido cardíaco humano usando folhas de espinafre descelularizadas. A rede natural de veias da folha transporta fluidos, simulando o fluxo sanguíneo do coração.",
-          institution: "Instituto Politécnico de Worcester", source: "Pesquisa Biomédica",
-          image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=800&q=80", imgCaption: "[Tecido cardíaco em folha de espinafre]"
-        },
-        {
-          id: 4, title: "Gel Regenerador de Cartilagem", shortDesc: "Fim das próteses metálicas", iconClass: "fas fa-bone", category: "Medicina Regenerativa", country: "Alemanha",
-          description: "Hidrogéis bioativos injetáveis que imitam a cartilagem do joelho. O gel estimula a adesão celular, permitindo que o próprio corpo regenere o tecido severamente lesionado sem cirurgias.",
-          institution: "Fraunhofer-Gesellschaft", source: "Revista Nature Materials",
-          image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80", imgCaption: "[Regeneração de cartilagem]"
-        },
-        {
-          id: 5, title: "Micro-robô de Rins", shortDesc: "Dissolve pedras sem cirurgia", iconClass: "fas fa-robot", category: "Micro-robótica", country: "Global",
-          description: "Um micro-robô magnético de 1cm carregado com urease atua diretamente sobre pedras nos rins. Guiado magneticamente, dissolve o cálculo rapidamente por dentro.",
-          institution: "Bioengenharia Magnética", source: "Pesquisa em Microrobótica",
-          image: "https://images.unsplash.com/photo-1614064016629-9e735e0766a5?auto=format&fit=crop&w=800&q=80", imgCaption: "[Micro-robô dissolvendo pedras]"
-        },
-        {
-          id: 6, title: "Nanobots Arteriais", shortDesc: "Limpadores de placas de gordura", iconClass: "fas fa-heartbeat", category: "Nanotecnologia", country: "Global",
-          description: "Bisturis microscópicos intravasculares navegam pela corrente sanguínea para dissolver mecanicamente placas de gordura (aterosclerose) nas artérias, evitando infartos.",
-          institution: "Laboratórios de Nanomedicina", source: "Inovação Nanotech Aplicada",
-          image: "https://images.unsplash.com/photo-1583912265922-83ef0a221fbc?auto=format&fit=crop&w=800&q=80", imgCaption: "[Nanobots limpando artérias]"
-        },
-        {
-          id: 7, title: "Cera de Ouvido vs Câncer", shortDesc: "Diagnóstico precoce super barato", iconClass: "fas fa-ear-listen", category: "Oncologia Translacional", country: "Brasil",
-          description: "A cera de ouvido acumula biomarcadores voláteis capazes de denunciar tumores em estágios iniciais. Um método incrivelmente barato, indolor e não-invasivo ideal para a atenção básica do SUS.",
-          institution: "Universidades Brasileiras", source: "Jornal Nacional",
-          image: "https://images.unsplash.com/photo-1579684453423-f84349ef60b0?auto=format&fit=crop&w=800&q=80", imgCaption: "[Exame clínico de diagnóstico]"
-        },
-        {
-          id: 8, title: "Veneno de Marimbondo", shortDesc: "Inibidor de Alzheimer", iconClass: "fas fa-bug", category: "Farmacologia da Biodiversidade", country: "Brasil",
-          description: "Peptídeos do veneno do marimbondo brasileiro (Polybia paulista) inibem fortemente a agregação de proteínas tóxicas no cérebro, abrindo nova fronteira para Alzheimer.",
-          institution: "Santa Casa / MedNucleo", source: "Pesquisa Biodiversidade",
-          image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80", imgCaption: "[Pesquisa com peptídeos]"
-        }
+    // ==========================================
+    // PAINEL 2: GRÁFICO RANKING DE PATENTES TOP 10 + BR
+    // ==========================================
+    const InteractiveBarChart = () => {
+      const [activeInsight, setActiveInsight] = useState(0);
+      
+      // Dados super enriquecidos (Top 10 Global + Brasil) com métricas de investimento e contexto estratégico real.
+      const data = [
+        { country: 'China', rank: '1º', display: '1.8M', width: '100%', color: 'bg-red-600', axes: ['IA Preditiva', 'Robótica'], insight: 'Apoiada pelo massivo plano "Healthy China 2030" (injetando US$ 1.2 Trilhão). A China emitiu mais de 40% das patentes globais de inteligência artificial médica e infraestrutura robótica nos últimos anos.', strategic: 'Consolidação de parcerias estatais com Big Techs asiáticas converte protótipos acadêmicos em produtos de linha de frente em meses.', source: 'OMPI/WIPO Report 2025', image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { country: 'EUA', rank: '2º', display: '503 Mil', width: '35%', color: 'bg-blue-600', axes: ['Deep Tech', 'Genômica'], insight: 'Embora percam em volume para a China, os EUA lideram de forma absoluta em monetização e impacto clínico. Concentram cerca de 65% do Venture Capital mundial focado em biotecnologia molecular.', strategic: 'O ecossistema é dominado pelas Big Pharmas, que monitoram e adquirem inovações de Healthtechs já nas Fases 1 e 2 de testes do FDA.', source: 'USPTO / CB Insights 2025', image: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { country: 'Japão', rank: '3º', display: '420 Mil', width: '28%', color: 'bg-gray-800', axes: ['Longevidade', 'Sensores'], insight: 'O Japão possui uma crise demográfica única (30% da população acima de 65 anos). O governo injetou mais de US$ 30Bi no plano "Sociedade 5.0" voltado unicamente para mitigar essa pressão no sistema.', strategic: 'A pauta nacional foca em manter idosos saudáveis em casa via biossensores integrados e robótica assistencial, esvaziando leitos do Estado.', source: 'Japan Patent Office (JPO)', image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { country: 'Alemanha', rank: '4º', display: '310 Mil', width: '22%', color: 'bg-orange-500', axes: ['Aparelhos 3D', 'Indústria 4.0'], insight: 'Maior motor industrial da Europa. A Alemanha lidera patentes em engenharia de precisão aplicada à saúde, como super-ressonâncias magnéticas, válvulas ultraleves e biomanufatura.', strategic: 'Integração agressiva entre laboratórios de pesquisa (ex: Fraunhofer) e conglomerados industriais (ex: Siemens) para rápida escala global.', source: 'DPMA / OMPI 2025', image: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { country: 'Coreia do Sul', rank: '5º', display: '260 Mil', width: '18%', color: 'bg-purple-600', axes: ['Chips Médicos', 'Óptica'], insight: 'Investe quase 5% do seu PIB em P&D global. O país utiliza sua supremacia mundial em semicondutores e telas de alta definição para dominar o diagnóstico por imagem avançada.', strategic: 'Mega-conglomerados (Chaebols como Samsung e LG) aplicam sua tecnologia de eletrônicos diretamente na saúde conectada (Wearables/IoMT).', source: 'KIPO / BioKorea 2025', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { country: 'Índia', rank: '6º', display: '150 Mil', width: '15%', color: 'bg-emerald-500', axes: ['Biofármacos', 'Inov. Frugal'], insight: 'Historicamente a "farmácia do mundo" por seus genéricos (exportando US$ 50Bi/ano). O crescimento atual (+19.2% ao ano) marca a transição feroz do país para o desenvolvimento de moléculas originais e IA frugal.', strategic: 'Política "Make in India": o governo fornece fortes subsídios para forçar empresas locais a migrarem de "copiadoras" para "patenteadoras".', source: 'WIPO India Patents Bulletin', image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { country: 'Suíça', rank: '7º', display: '115 Mil', width: '12%', color: 'bg-red-400', axes: ['Oncologia', 'Imunologia'], insight: 'Possui a maior densidade de patentes médicas de alto impacto financeiro per capita do mundo. Basileia e Genebra formam o principal hub da "Big Pharma" europeia (Novartis, Roche).', strategic: 'Foco quase exclusivo no alto da pirâmide de valor agregado, como terapias-alvo revolucionárias (ex: células CAR-T para oncologia e doenças raras).', source: 'Swiss IPI / Eurostat', image: 'https://images.unsplash.com/photo-1579165466741-7f35e4755660?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { country: 'França', rank: '8º', display: '95 Mil', width: '10%', color: 'bg-blue-400', axes: ['Telemedicina', 'Oncologia'], insight: 'O agressivo plano de Estado "France 2030" alocou € 7.5 Bilhões em financiamento soberano focados unicamente na revolução do setor de saúde e biologia.', strategic: 'A França usa o fundo público "Bpifrance" para turbinar o financiamento em deep techs, mantendo a propriedade intelectual dentro das fronteiras da UE.', source: 'INPI France 2025', image: 'https://images.unsplash.com/photo-1584308666744-24d5e4a520ed?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { country: 'Reino Unido', rank: '9º', display: '85 Mil', width: '8%', color: 'bg-indigo-600', axes: ['Genômica', 'Dados / IA'], insight: 'O Serviço Nacional de Saúde (NHS) atende mais de 65 milhões de pessoas. Essa é a maior e mais unificada base de dados demográficos reais e longitudinais do planeta livre.', strategic: 'O governo "abre" (sob anonimato) dados do NHS para treinar os algoritmos de IA de Big Techs, atraindo as sedes das melhores HealthTechs do mundo (ex: DeepMind).', source: 'UKIPO / NHS Digital', image: 'https://images.unsplash.com/photo-1532187643603-c76088e5e6e6?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { country: 'Israel', rank: '10º', display: '70 Mil', width: '6%', color: 'bg-cyan-500', axes: ['Cyber-Saúde', 'Algoritmos'], insight: 'Reconhecida globalmente como a "Startup Nation", Israel tem a maior densidade global de HealthTechs baseadas em sofisticação de software per capita.', strategic: 'Genialidade em "spin-offs" militares: as mesmas tecnologias (visão computacional, IA, cibersegurança) usadas nas forças armadas são convertidas por ex-militares em diagnósticos médicos precisos.', source: 'Israel Innovation Authority', image: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { country: 'Brasil', rank: '24º', display: '31 Mil', width: '4%', color: 'bg-yellow-500', axes: ['Biodiversidade', 'Pesquisa'], insight: 'A posição reflete um grande mercado consumidor, mas de baixa autonomia: 67% das patentes aplicadas aqui são de matrizes estrangeiras visando lucro no SUS.', strategic: 'O "gap" nacional é financeiro. O Brasil tem biólogos de excelência e a maior biodiversidade do mundo, mas falha em tracionar Fundos de Risco (VCs) para escalar a pesquisa universitária à indústria.', source: 'INPI - Indicadores 2024/25', image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
       ];
 
       return (
-        <div className="flex flex-col h-full flex-1">
-          <div className="mb-4 shrink-0">
-            <InteractiveHint text="Selecione um caso na lista para explorar os detalhes" />
+        <div className="flex flex-col lg:flex-row h-full gap-5 lg:gap-8 flex-1">
+          {/* Coluna Esquerda - Gráfico de Barras Top 10 + Brasil */}
+          <div className="w-full lg:w-4/12 flex flex-col gap-2 border-b lg:border-b-0 lg:border-r border-gray-200 pb-4 lg:pb-0 lg:pr-6 shrink-0 h-[250px] lg:h-auto">
+            <div className="mb-2"><InteractiveHint text="Passe o cursor sobre a lista global" /></div>
+            <div className="flex-1 flex flex-col gap-1 overflow-y-auto custom-scrollbar pr-2">
+              {data.map((item, index) => (
+                <div key={item.country} className="group cursor-pointer relative" onMouseEnter={() => setActiveInsight(index)}>
+                  <div className={`p-1.5 lg:p-2 rounded-lg transition-all duration-300 ${activeInsight === index ? 'bg-gray-100 shadow-sm border border-gray-200' : 'hover:bg-gray-50 border border-transparent'}`}>
+                    <div className="flex justify-between items-center mb-1">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-5 h-5 flex items-center justify-center rounded text-[9px] font-black transition-colors ${activeInsight === index ? 'bg-gray-900 text-white' : 'bg-white text-gray-500 border border-gray-200 group-hover:border-gray-300'}`}>{item.rank}</div>
+                        <span className={`text-[11px] lg:text-[13px] font-bold uppercase tracking-wide ${activeInsight === index ? 'text-gray-900' : 'text-gray-600'}`}>{item.country === 'Brasil' && <i className="fas fa-map-marker-alt text-yellow-600 mr-1"></i>}{item.country}</span>
+                      </div>
+                      <span className="text-[10px] lg:text-xs font-black text-gray-800">{item.display}</span>
+                    </div>
+                    {/* Barra de Progresso Minimizada */}
+                    <div className="w-full bg-gray-200 h-1.5 lg:h-2 rounded-full overflow-hidden ml-7" style={{ width: 'calc(100% - 28px)' }}>
+                      <div className={`h-full ${item.color} transition-all duration-700 ease-out ${activeInsight === index ? 'opacity-100' : 'opacity-40'}`} style={{ width: item.width }}></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
           
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 flex-1 overflow-hidden">
-            <div className="w-full lg:w-4/12 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto custom-scrollbar pb-2 lg:pr-2">
-              {innovations.map((inv, index) => (
+          {/* Coluna Direita - Painel Deep Dive com Dark Mode Elegante */}
+          <div className="w-full lg:w-8/12 bg-gray-900 rounded-3xl p-5 lg:p-8 text-white flex flex-col shadow-2xl relative overflow-hidden flex-1 border border-gray-800">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-5 shrink-0 border-b border-gray-700 pb-4 gap-4">
+               <div className="flex items-center gap-3">
+                 <i className={`fas fa-chart-line text-2xl lg:text-3xl ${data[activeInsight].country === 'Brasil' ? 'text-yellow-400' : 'text-blue-400'}`}></i>
+                 <div>
+                   <h4 className={`font-black text-2xl lg:text-3xl tracking-tight leading-none ${data[activeInsight].country === 'Brasil' ? 'text-yellow-400' : 'text-white'}`}>{data[activeInsight].country}</h4>
+                   <div className="flex gap-2 mt-2">
+                     {data[activeInsight].axes.map((axis, i) => (<span key={i} className="text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-widest bg-gray-800 text-gray-300 border border-gray-700">{axis}</span>))}
+                   </div>
+                 </div>
+               </div>
+               <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/20 flex items-center gap-2 shrink-0">
+                 <i className="fas fa-trophy text-amber-400 text-sm"></i>
+                 <span className="font-black text-xs lg:text-sm tracking-widest uppercase text-gray-100">{data[activeInsight].rank} Posição Global</span>
+               </div>
+            </div>
+
+            <div className="flex flex-col lg:flex-row gap-6 flex-1 overflow-y-auto custom-scrollbar pr-2">
+              <div className="flex flex-col gap-4 flex-1">
+                <p className="text-gray-300 text-xs lg:text-sm leading-relaxed font-medium">
+                  <strong className="text-white block mb-2 uppercase text-[10px] tracking-widest">O Fundo Macroeconômico:</strong>
+                  {data[activeInsight].insight}
+                </p>
+                
+                <div className="bg-gradient-to-r from-gray-800/80 to-gray-800/20 p-4 lg:p-5 rounded-2xl border-l-4 border-blue-500 mt-auto shadow-inner">
+                  <div className="text-[10px] lg:text-xs text-blue-300 font-black uppercase tracking-widest mb-2 flex items-center gap-2"><i className="fas fa-chess-knight"></i> Estratégia de Estado / Mercado</div>
+                  <p className="text-xs lg:text-sm text-gray-100 leading-relaxed font-medium">{data[activeInsight].strategic}</p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col w-full lg:w-5/12 shrink-0">
+                <div className="w-full h-40 lg:h-48 bg-black rounded-2xl overflow-hidden mb-3 border border-gray-700 shadow-md">
+                  <img src={data[activeInsight].image} alt={data[activeInsight].imgCaption} className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500" />
+                </div>
+                <span className="text-[9px] text-gray-500 italic mb-2 leading-tight text-center bg-black/40 py-1.5 rounded">{data[activeInsight].imgCaption}</span>
+                <div className="mt-auto"><SourceBadge source={data[activeInsight].source} dark={true} /></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // --- PAINEL 3: GRÁFICO RANKING GLOBAL DE HOSPITAIS ---
+    const RankingHospitals = () => {
+      const [selectedRank, setSelectedRank] = useState(1);
+      
+      const hospitals = [
+        { rank: 1, name: 'Mayo Clinic', location: 'Rochester, EUA', type: 'Líder Mundial', iconClass: "fas fa-star", insight: 'Atendendo mais de 1.3 Milhão de pessoas anualmente, o hospital lidera o ranking isolado. Firmou uma parceria decenal estratégica (multibilionária) com o Google Cloud, aplicando processamento de IA em massa nos prontuários para personalizar a medicina genômica em tempo real para cada paciente internado.', note: 'Uso maciço de IA preditiva no fluxo hospitalar reduziu severamente erros de triagem e otimizou giros de leitos.', source: 'Newsweek World\'s Best Hospitals 2024 / Mayo Clinic Data', image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { rank: 2, name: 'Cleveland Clinic', location: 'Ohio, EUA', type: 'Vanguarda Tecnológica', iconClass: "fas fa-microchip", insight: 'Revolucionou a história da pesquisa ao investir US$ 300 Milhões no "Discovery Accelerator" em consórcio com a IBM. Instalaram, dentro de suas paredes, o primeiro Computador Quântico dedicado puramente à saúde do mundo. O foco? Simular combinações de dobras de proteínas para curar câncer e patologias complexas em dias, não mais em décadas.', note: 'Primeira operação hospitalar de Computação Quântica em solo livre do planeta.', source: 'IBM Quantum Healthcare / Cleveland Clinic Press', image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { rank: 6, name: 'Charité - Berlin', location: 'Alemanha', type: 'Líder Europeu', iconClass: "fas fa-microscope", insight: 'Sendo o maior hospital universitário da Europa, o Charité abriga a vanguarda mundial em "Medicina Translacional" — a ciência de capturar rapidamente uma descoberta laboratorial e transformá-la em tratamento aplicável nos leitos (Bedside to Bench to Bedside). Eles lideram a integração entre dados hospitalares clínicos europeus e deep learning.', note: 'É o hospital de referência global em conectar pesquisa biológica fundamental com a cama do paciente.', source: 'Newsweek World Ranking 2024 / Charité Research', image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { rank: 10, name: 'Karolinska Institutet', location: 'Estocolmo, Suécia', type: 'Excelência Genômica', iconClass: "fas fa-dna", insight: 'Lar sagrado do comitê oficial do Prêmio Nobel de Fisiologia/Medicina. O hospital universitário Karolinska atua como ponta de lança planetária em ensaios clínicos hiper-rigorosos. Inovam de maneira acelerada em biologia imunológica, transplantes sintéticos e biotecnologias aplicadas ao reparo do sistema nervoso central.', note: 'Berço intelectual que dita os rumos das terapias imunológicas de elite mundiais.', source: 'Newsweek 2024 / Swedish Healthcare Data', image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { rank: 16, name: 'Albert Einstein', location: 'São Paulo, Brasil', type: 'Líder Latam', iconClass: "fas fa-rocket", insight: 'Coroado o 1º hospital da América Latina há mais de uma década. Diferencia-se mundialmente porque não apenas absorve tecnologia rica, mas a fomenta: o hospital fundou a incubadora "Eretz.bio", um ecossistema feroz que já abrigou mais de 130 startups (healthtechs), direcionando dezenas de milhões à inovação biotecnológica local e internacional.', note: 'A aceleradora Eretz.bio é a principal porta de entrada e filtragem para inovações em IA médica do Sul Global.', source: 'Relatório Einstein de Inovação / Newsweek Latam', image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { rank: 189, name: 'HC-FMUSP', location: 'São Paulo, Brasil', type: 'Potência Pública', iconClass: "fas fa-hospital-user", insight: 'O feito é monumental: é o único hospital 100% público do Brasil a furar o rigoroso estrato global da Newsweek. Com o braço tecnológico InovaHC, o complexo de 2.400 leitos gerou mais de R$ 40 Milhões em co-criações. Ele atua como o laboratório vivo ("Sandbox") essencial para validar healthtechs e algoritmos enfrentando os desafios brutais da diversidade genética e logística do SUS.', note: 'O InovaHC submete a tecnologia do setor privado ao gigantesco e complexo teste de stress real do SUS.', source: 'Newsweek 2024 / Balanço Oficial InovaHC USP', image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+      ];
+      return (
+        <div className="flex flex-col h-full flex-1">
+           <div className="mb-4 shrink-0"><InteractiveHint text="Navegue na lista para verificar o lastro tecnológico da vanguarda hospitalar" /></div>
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 flex-1 overflow-hidden">
+            
+            {/* Menu Lateral Hospitais */}
+            <div className="w-full lg:w-4/12 flex flex-col gap-2 overflow-y-auto custom-scrollbar pb-2 pr-2">
+              {hospitals.map((hosp) => (
                 <button 
-                  key={inv.id} onClick={() => setActiveInv(index)}
-                  className={`p-3 lg:p-4 rounded-xl border-2 transition-all flex items-center gap-3 text-left min-w-[240px] lg:min-w-full shrink-0 group ${activeInv === index ? 'border-amber-500 bg-gray-900 shadow-md lg:translate-x-1' : 'border-gray-200 bg-white hover:bg-gray-100'}`}
+                  key={hosp.rank} onClick={() => setSelectedRank(hosp.rank)} 
+                  className={`p-3 lg:p-4 rounded-2xl border-2 transition-all flex items-center gap-3 shrink-0 text-left group ${selectedRank === hosp.rank ? 'border-blue-600 bg-blue-50/50 shadow-md lg:translate-x-1' : 'border-gray-200 bg-white hover:border-gray-400 hover:bg-gray-50'}`}
                 >
-                  <div className={`w-10 h-10 flex items-center justify-center rounded-lg shadow-sm border shrink-0 transition-colors ${activeInv === index ? 'bg-gray-800 border-gray-700 text-amber-400' : 'bg-gray-100 border-gray-200 text-gray-500 group-hover:bg-white'}`}>
-                    <i className={`${inv.iconClass} text-lg`}></i>
+                  <div className={`w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex flex-col items-center justify-center shrink-0 shadow-inner border transition-colors ${selectedRank === hosp.rank ? 'bg-blue-600 text-white border-blue-700' : 'bg-gray-100 text-gray-600 border-gray-300 group-hover:bg-white'}`}>
+                    <span className="text-[8px] uppercase font-bold tracking-widest leading-none mt-1">Ranking</span>
+                    <span className="font-black text-lg lg:text-xl leading-none mt-0.5">{hosp.rank}</span>
                   </div>
-                  <div className="truncate flex-1">
-                    <span className={`block text-[9px] lg:text-[10px] font-bold uppercase tracking-widest mb-0.5 ${activeInv === index ? 'text-amber-400' : 'text-blue-600'}`}>{inv.category}</span>
-                    <span className={`font-black text-xs lg:text-sm leading-tight truncate block ${activeInv === index ? 'text-white' : 'text-gray-900'}`}>{inv.title}</span>
-                    <span className={`text-[10px] mt-0.5 block truncate ${activeInv === index ? 'text-gray-400' : 'text-gray-500'}`}>{inv.shortDesc}</span>
+                  <div className="flex-1 overflow-hidden">
+                    <h3 className={`font-black text-sm lg:text-base leading-tight truncate mb-1 ${selectedRank === hosp.rank ? 'text-blue-900' : 'text-gray-900'}`}>{hosp.name}</h3>
+                    <p className="text-[9px] lg:text-[10px] font-bold uppercase tracking-wider text-gray-500 truncate flex items-center gap-1.5 mb-1"><i className="fas fa-map-marker-alt"></i> {hosp.location}</p>
+                    <span className={`inline-block text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${selectedRank === hosp.rank ? 'bg-blue-100 border-blue-200 text-blue-700' : 'bg-gray-100 border-gray-200 text-gray-500'}`}>{hosp.type}</span>
                   </div>
                 </button>
               ))}
             </div>
 
-            <div className="w-full lg:w-8/12 bg-black rounded-3xl overflow-hidden flex flex-col shadow-2xl min-h-[400px] relative border border-gray-800">
-              <div className="absolute inset-0 z-0">
-                 <img src={innovations[activeInv].image} alt={innovations[activeInv].imgCaption} className="w-full h-1/2 lg:h-full object-cover opacity-30 lg:opacity-40 animate-fade-in mask-image-b-gradient" key={`img-${activeInv}`} />
-                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
-              </div>
-
-              <div className="relative z-10 p-6 lg:p-10 flex flex-col h-full justify-end text-white overflow-y-auto custom-scrollbar animate-fade-in" key={`content-${activeInv}`}>
-                <div className="mb-auto hidden lg:flex justify-between items-start">
-                  <span className="bg-amber-500 text-black font-black text-[10px] uppercase tracking-widest px-3 py-1 rounded-sm flex items-center gap-1.5 shadow-lg">
-                    <i className="fas fa-bolt w-3 h-3"></i> Inovação Disruptiva
-                  </span>
-                  <span className="flex items-center gap-1.5 text-xs font-bold text-gray-400 uppercase tracking-widest bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-700 backdrop-blur-sm">
-                    <i className="fas fa-map-marker-alt text-amber-500"></i> {innovations[activeInv].country}
-                  </span>
-                </div>
-
-                <div className="mt-12 lg:mt-0">
-                  <h2 className="text-3xl lg:text-5xl font-black mb-2 leading-tight text-white drop-shadow-md">{innovations[activeInv].title}</h2>
-                  <h4 className="text-amber-400 text-sm lg:text-lg font-bold mb-6 tracking-wide drop-shadow-sm">"{innovations[activeInv].shortDesc}"</h4>
-                  
-                  <div className="bg-gray-900/60 backdrop-blur-md border border-gray-700/50 p-5 rounded-2xl mb-6 shadow-inner">
-                    <p className="text-gray-200 text-sm lg:text-base leading-relaxed">{innovations[activeInv].description}</p>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <span className="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Instituição / Referência</span>
-                      <span className="flex items-center gap-2 font-bold text-sm text-gray-100">
-                        <i className="fas fa-building text-blue-400"></i> {innovations[activeInv].institution}
-                      </span>
-                      <div className="mt-2"><SourceBadge source={innovations[activeInv].source} dark={true} /></div>
-                    </div>
-                    
-                    <a href={`https://www.google.com/search?q=${encodeURIComponent(innovations[activeInv].title + ' ' + innovations[activeInv].institution)}`} 
-                       target="_blank" rel="noopener noreferrer"
-                       className="flex items-center justify-center gap-2 bg-white text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-amber-400 transition-colors shadow-lg group shrink-0 no-underline">
-                      <i className="fas fa-external-link-alt text-gray-500 group-hover:text-black transition-colors"></i> Ler na Íntegra
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    };
-
-    // --- GRÁFICOS INTERATIVOS E PAINÉIS EXISTENTES ---
-    const InteractiveBarChart = () => {
-      const [activeInsight, setActiveInsight] = useState(0);
-      const data = [
-        { country: 'China', rank: '1º', display: '1.8M', width: '100%', color: 'bg-red-600', axes: ['IA Preditiva', 'Robótica'], insight: 'Injeta capital massivo para acelerar patentes de infraestrutura hospitalar e robótica, buscando independência ocidental.', strategic: 'Parcerias público-privadas convertem pesquisa em protótipos em tempo recorde.', source: 'OMPI Report 2025', image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=80', imgCaption: '[Robótica Médica]' },
-        { country: 'EUA', rank: '2º', display: '503 Mil', width: '35%', color: 'bg-blue-600', axes: ['Deep Tech', 'CRISPR'], insight: 'As patentes americanas focam em biologia sintética e edição genética, gerando os tratamentos mais caros do mundo.', strategic: 'Dominância das "Big Pharmas" que adquirem healthtechs logo nas primeiras fases.', source: 'Fórum Econômico Mundial', image: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=500&q=80', imgCaption: '[Pesquisa Genética]' },
-        { country: 'Japão', rank: '3º', display: '420 Mil', width: '28%', color: 'bg-gray-800', axes: ['Longevidade', 'Regenerativa'], insight: 'O ecossistema japonês é voltado a resolver sua crise demográfica. Foco brutal em terapias senolíticas e biossensores de idosos.', strategic: 'Tecnologia voltada para manutenção da qualidade de vida domiciliar.', source: 'Japan Patent Office', image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=500&q=80', imgCaption: '[Dispositivos Vestíveis]' },
-        { country: 'Índia', rank: '6º', display: '150 Mil', width: '15%', color: 'bg-emerald-500', axes: ['P&D', 'Genéricos'], insight: 'Conhecida como a "farmácia do mundo", a Índia agora investe pesadamente em P&D original (+19.2% cresc.).', strategic: 'Incentivos para migrar da manufatura (copiar) para a patenteabilidade (criar).', source: 'WIPO India Report', image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=500&q=80', imgCaption: '[Produção Farmacêutica]' },
-        { country: 'Brasil', rank: '24º', display: '31 Mil', width: '5%', color: 'bg-yellow-500', axes: ['Insumos', 'Diagnósticos'], insight: 'Nossa produção foca em insumos da biodiversidade e soluções diagnósticas, lideradas por instituições públicas.', strategic: 'Oportunidade para venture capital investir na transição de patentes para o mercado.', source: 'INPI 2024/25', image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=500&q=80', imgCaption: '[Pesquisador Acadêmico]' },
-      ];
-
-      return (
-        <div className="flex flex-col lg:flex-row h-full gap-6 flex-1">
-          <div className="w-full lg:w-5/12 flex flex-col gap-2 border-b lg:border-b-0 lg:border-r border-gray-200 pb-4 lg:pb-0 lg:pr-6 shrink-0">
-            <div className="mb-2"><InteractiveHint text="Passe o cursor sobre as barras" /></div>
-            <div className="flex-1 flex flex-col justify-around gap-4 lg:gap-2 overflow-y-auto custom-scrollbar">
-              {data.map((item, index) => (
-                <div key={item.country} className="group cursor-pointer" onMouseEnter={() => setActiveInsight(index)}>
-                  <div className="flex justify-between items-end mb-1">
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-2">
-                        <div className={`flex items-center justify-center w-6 h-6 lg:w-7 lg:h-7 rounded text-[10px] font-black transition-all duration-300 border ${activeInsight === index ? 'bg-gray-900 text-white border-gray-900' : 'bg-gray-100 text-gray-500 border-gray-200 group-hover:bg-gray-200'}`}>{item.rank}</div>
-                        <span className="flex items-center gap-1 text-xs lg:text-sm font-bold uppercase tracking-wider text-gray-800">{item.country === 'Brasil' && <i className="fas fa-map-marker-alt text-yellow-600"></i>} {item.country}</span>
-                      </div>
-                      <div className="flex flex-wrap gap-1 lg:ml-9">
-                        {item.axes.map((axis, i) => (<span key={i} className={`text-[9px] px-1.5 py-0.5 rounded font-bold tracking-wide transition-colors border ${activeInsight === index ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-500 border-gray-200'}`}>{axis}</span>))}
-                      </div>
-                    </div>
-                    <div className="text-right"><span className="text-xs lg:text-sm font-black text-gray-900 block leading-tight">{item.display}</span></div>
-                  </div>
-                  <div className="w-full bg-gray-100 h-3 lg:h-4 rounded-r-md overflow-hidden flex lg:ml-9" style={{ width: 'calc(100% - 36px)' }}>
-                    <div className={`h-full ${item.color} transition-all duration-700 ease-out flex items-center px-4 ${activeInsight === index ? 'opacity-100' : 'opacity-30'}`} style={{ width: item.width }}></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="w-full lg:w-7/12 bg-gray-900 rounded-3xl p-5 lg:p-6 text-white flex flex-col shadow-xl min-h-[350px]">
-            <div className="flex items-center justify-between mb-4 shrink-0">
-               <div className="flex items-center gap-3">
-                 <i className={`fas fa-info-circle text-xl ${data[activeInsight].country === 'Brasil' ? 'text-yellow-400' : 'text-blue-400'}`}></i>
-                 <h4 className={`font-black text-xl lg:text-2xl ${data[activeInsight].country === 'Brasil' ? 'text-yellow-400' : 'text-white'}`}>Análise: {data[activeInsight].country}</h4>
-               </div>
-               <div className="bg-white/10 px-3 py-1 rounded-full border border-white/20 flex items-center gap-1.5">
-                 <i className="fas fa-hashtag text-gray-400 text-xs"></i><span className="font-bold text-[10px] lg:text-xs tracking-widest uppercase text-gray-200">{data[activeInsight].rank}</span>
-               </div>
-            </div>
-            <div className="flex flex-col lg:flex-row gap-5 flex-1 overflow-y-auto custom-scrollbar">
-              <div className="flex flex-col gap-4 flex-1">
-                <p className="text-gray-300 text-xs lg:text-sm leading-relaxed">{data[activeInsight].insight}</p>
-                <div className="bg-white/10 p-3 lg:p-4 rounded-xl border border-white/20 mt-auto">
-                  <div className="text-[10px] lg:text-xs text-blue-300 font-bold uppercase tracking-widest mb-1.5 flex items-center gap-2"><i className="fas fa-bullseye"></i> Ação Estratégica</div>
-                  <p className="text-xs lg:text-sm text-gray-200">{data[activeInsight].strategic}</p>
-                </div>
-              </div>
-              <div className="flex flex-col w-full lg:w-5/12 shrink-0">
-                <div className="w-full h-32 lg:h-40 bg-black rounded-xl overflow-hidden mb-2 border border-gray-700">
-                  <img src={data[activeInsight].image} alt={data[activeInsight].imgCaption} className="w-full h-full object-cover opacity-80" />
-                </div>
-                <span className="text-[9px] text-gray-500 italic mb-2 leading-tight">{data[activeInsight].imgCaption}</span>
-                <div className="mt-auto"><SourceBadge source={data[activeInsight].source} /></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    };
-
-    const RankingHospitals = () => {
-      const [selectedRank, setSelectedRank] = useState(1);
-      const hospitals = [
-        { rank: 1, name: 'Mayo Clinic', location: 'EUA', type: 'Global', iconClass: "fas fa-globe", insight: 'Integraram IA em todos os processos, da triagem ao diagnóstico genético, reduzindo erros médicos em 22% e otimizando leitos.', note: 'IA preditiva reduzindo tempo de diagnóstico.', source: 'Newsweek Hospitals', image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=500&q=80', imgCaption: '[Hospital Smart]' },
-        { rank: 2, name: 'Cleveland Clinic', location: 'EUA', type: 'Global', iconClass: "fas fa-globe", insight: 'Instalaram o primeiro Computador Quântico dedicado à saúde (IBM). O objetivo é simular dobras de proteínas para curar câncer e Alzheimer.', note: 'Aliança Quântica de Saúde global.', source: 'IBM Quantum Healthcare', image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=500&q=80', imgCaption: '[Computador Quântico]' },
-        { rank: 16, name: 'Albert Einstein', location: 'Brasil', type: 'Latam', iconClass: "fas fa-building", insight: 'Líder isolado na América Latina. Cria tecnologia através do Hub Eretz.bio, que acelerou mais de 120 startups conectando-as à realidade clínica.', note: 'Eretz.bio capta deep techs.', source: 'Ranking Newsweek', image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=500&q=80', imgCaption: '[Incubadora]' },
-        { rank: 189, name: 'HC-FMUSP', location: 'Brasil', type: 'Público', iconClass: "fas fa-bullseye", insight: 'Único hospital público brasileiro na elite. O núcleo InovaHC atua como "Sandbox" unindo a imensa base de dados do SUS com corporações privadas.', note: 'Open Innovation Lab.', source: 'InovaHC', image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=500&q=80', imgCaption: '[Pesquisa SUS]' },
-      ];
-      return (
-        <div className="flex flex-col h-full flex-1">
-           <div className="mb-4 shrink-0"><InteractiveHint text="Selecione as instituições para ver a análise" /></div>
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 flex-1 overflow-hidden">
-            <div className="w-full lg:w-5/12 flex flex-col gap-3 overflow-y-auto custom-scrollbar pb-2 pr-2">
-              {hospitals.map((hosp) => (
-                <div key={hosp.rank} onClick={() => setSelectedRank(hosp.rank)} className={`p-3 lg:p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 lg:gap-4 shrink-0 ${selectedRank === hosp.rank ? 'border-black bg-black text-white shadow-md lg:translate-x-2' : 'border-gray-200 bg-white hover:border-gray-400'}`}>
-                  <div className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full flex flex-col items-center justify-center shrink-0 ${selectedRank === hosp.rank ? 'bg-white text-black' : 'bg-gray-100'}`}>
-                    <span className="text-[9px] lg:text-[10px] uppercase font-bold leading-none mt-1">Nº</span><span className="font-black text-base lg:text-lg leading-none">{hosp.rank}</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm lg:text-lg leading-tight">{hosp.name}</h3><p className={`text-[10px] lg:text-xs uppercase tracking-wide mt-1 ${selectedRank === hosp.rank ? 'text-gray-400' : 'text-gray-500'}`}>{hosp.location} • {hosp.type}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="w-full lg:w-7/12 bg-gray-50 border border-gray-200 p-5 lg:p-8 rounded-3xl flex flex-col relative overflow-hidden min-h-[350px]">
+            {/* Deep Dive Hospitais */}
+            <div className="w-full lg:w-8/12 bg-white border border-gray-200 p-6 lg:p-8 rounded-3xl flex flex-col relative overflow-hidden min-h-[400px] shadow-xl">
               {hospitals.filter(h => h.rank === selectedRank).map(active => (
-                <div key={active.rank} className="relative z-10 flex flex-col h-full overflow-y-auto custom-scrollbar pr-2">
-                  <div className="flex justify-between items-start mb-4 lg:mb-6 shrink-0">
+                <div key={active.rank} className="relative z-10 flex flex-col h-full overflow-y-auto custom-scrollbar pr-2 animate-fade-in">
+                  <div className="flex justify-between items-start mb-6 shrink-0 border-b border-gray-100 pb-5">
                     <div>
-                      <div className="text-[10px] lg:text-xs font-bold text-blue-600 uppercase tracking-widest mb-1.5 flex items-center gap-2"><i className={active.iconClass}></i> Liderança</div>
-                      <h2 className="text-2xl lg:text-3xl font-black text-gray-900">{active.name}</h2>
+                      <div className="text-[10px] lg:text-xs font-black text-blue-600 uppercase tracking-widest mb-2 flex items-center gap-2"><i className={active.iconClass}></i> O Diferencial Competitivo Global</div>
+                      <h2 className="text-3xl lg:text-4xl font-black text-gray-900 leading-tight">{active.name}</h2>
                     </div>
-                    <div className="w-24 h-16 lg:w-32 lg:h-20 rounded-lg overflow-hidden border border-gray-300 shadow-sm shrink-0 hidden sm:block">
+                    <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-2xl overflow-hidden border border-gray-200 shadow-md shrink-0 hidden sm:block">
                        <img src={active.image} alt={active.imgCaption} className="w-full h-full object-cover" />
                     </div>
                   </div>
-                  <div className="flex-grow">
-                    <p className="text-gray-700 leading-relaxed font-light mb-4 text-xs lg:text-sm border-l-2 border-black pl-3">{active.insight}</p>
-                    <div className="bg-white p-3 lg:p-4 rounded-xl border border-gray-200 mb-4 shadow-sm">
-                      <h4 className="text-[10px] lg:text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 border-b border-gray-100 pb-1.5">Destaque Estratégico</h4>
-                      <div className="flex items-center gap-2 text-xs lg:text-sm text-gray-900 font-bold"><i className="fas fa-lightbulb text-amber-500"></i> {active.note}</div>
+                  <div className="flex-grow flex flex-col justify-center">
+                    <p className="text-gray-700 leading-relaxed font-medium mb-6 text-sm lg:text-base border-l-4 border-blue-600 pl-4 lg:pl-6 bg-gray-50 p-5 rounded-r-2xl text-justify shadow-sm">
+                      {active.insight}
+                    </p>
+                    <div className="bg-blue-50/70 p-5 lg:p-6 rounded-2xl border border-blue-100 mb-2 shadow-inner">
+                      <h4 className="text-[10px] lg:text-xs font-black text-blue-500 uppercase tracking-widest mb-3 border-b border-blue-200 pb-2 flex items-center gap-2"><i className="fas fa-gem text-amber-500"></i> Destaque Estratégico Mensurável</h4>
+                      <p className="text-xs lg:text-sm text-blue-900 font-bold leading-relaxed">{active.note}</p>
                     </div>
                   </div>
-                  <div className="shrink-0 mt-auto">
-                    <span className="text-[9px] text-gray-400 italic block mb-1">{active.imgCaption}</span>
+                  <div className="shrink-0 mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <span className="text-[10px] text-gray-400 italic block">{active.imgCaption}</span>
                     <SourceBadge source={active.source} />
                   </div>
                 </div>
@@ -341,124 +259,165 @@
       );
     };
 
-    const BrazilianPatentsParadox = () => {
-      const [hoverArea, setHoverArea] = useState('foreign');
-      const data = {
-        foreign: { title: "O Domínio Estrangeiro", statsNumber: "21.073", statsLabel: "Depósitos Estrangeiros", text: "Dois terços da tecnologia de ponta protegida no Brasil pertencem a corporações globais. Isso encarece os custos do SUS devido aos altos royalties.", origins: [{ c: "EUA", flag: "🇺🇸" }, { c: "Alemanha", flag: "🇩🇪" }, { c: "Suíça", flag: "🇨🇭" }, { c: "China", flag: "🇨🇳" }], action: "A estratégia deve migrar para atração de matrizes industriais através de Parcerias Público-Privadas (PPPs).", source: "INPI 2025", image: "https://images.unsplash.com/photo-1587370560942-ad2a04eabb6d?auto=format&fit=crop&w=500&q=80", imgCaption: "[Insumos Importados]" },
-        domestic: { title: "A Ciência Solitária", statsNumber: "9.963", statsLabel: "Depósitos Nacionais", text: "A ciência brasileira brota quase exclusivamente das Universidades Públicas. O grande obstáculo é o 'Vale da Morte': levar a pesquisa acadêmica para a indústria.", origins: [{ c: "USP (SP)", flag: "📍" }, { c: "UFCG (PB)", flag: "📍" }, { c: "UFMG (MG)", flag: "📍" }, { c: "UFG (GO)", flag: "📍" }], action: "A integração de laboratórios acadêmicos com Venture Capital é essencial para escalar financeiramente a pesquisa.", source: "Observatório de Inovação", image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=500&q=80", imgCaption: "[Pesquisa Universitária]" }
-      };
-      const activeData = hoverArea === 'foreign' ? data.foreign : data.domestic;
+    // --- PAINEL 4: INOVAÇÕES DISRUPTIVAS ---
+    const DisruptiveInnovations = () => {
+      const [activeInv, setActiveInv] = useState(0);
+
+      const innovations = [
+        { id: 1, title: "Mapeamento Fluorescente de Veias", shortDesc: "O fim da agulha na veia errada", iconClass: "fas fa-qrcode", category: "Procedimento Guiado", country: "EUA/Global", description: "Uma tecnologia revolucionária de realidade aumentada (AR) baseada em espectroscopia projeta um mapa exato, luminoso e em tempo real das veias diretamente na pele do paciente. Utilizando luz infravermelha próxima inofensiva, o sistema detecta a hemoglobina com altíssima precisão térmica, criando um contraste visual instantâneo para exames e acessos intravenosos difíceis.", institution: "StartSe Health / Hospitais Globais", source: "Demonstração Tecnológica Médica Aplicada", image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80", imgCaption: "" },
+        { id: 2, title: "Implante Cerebral Wireless (DOT)", shortDesc: "Modulação neural via app para depressão", iconClass: "fas fa-brain", category: "Neurotecnologia", country: "EUA", description: "Recentemente aprovado para testes clínicos restritos pelo FDA americano, o dispositivo DOT é um implante cibernético sem fio e cirurgicamente minimamente invasivo posicionado delicadamente acima do crânio. Ele modula a atividade elétrica dos circuitos cerebrais por Bluetooth (via app programável) para o tratamento da depressão crônica aguda e Parkinson severo, eliminando efeitos colaterais químicos.", institution: "FDA Approval Board / Empresas de Neurotech", source: "Revista Wired / Interesting Engineering", image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80", imgCaption: "" },
+        { id: 3, title: "Coração Funcional de Espinafre", shortDesc: "Plantas atuando como scaffolds humanos", iconClass: "fas fa-leaf", category: "Engenharia de Tecidos", country: "EUA", description: "O maior gargalo para fabricar órgãos 3D é vascularizar o tecido sem que ele morra. Uma equipe transdisciplinar encontrou a resposta descelularizando folhas comuns de espinafre, deixando intacta a estrutura robusta de celulose orgânica. Os cientistas povoaram então os capilares vegetais da folha com células de tecido cardíaco humano vivo, que passaram a bater ritmicamente e transportar sangue.", institution: "Worcester Polytechnic Institute (WPI)", source: "Autoexplicando / J. Biomaterials", image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=800&q=80", imgCaption: "" },
+        { id: 4, title: "Gel Biológico para Cartilagem", shortDesc: "O fim das dolorosas próteses metálicas", iconClass: "fas fa-bone", category: "Medicina Regenerativa", country: "Alemanha", description: "A dor crônica nos joelhos por atrito ósseo tem nova perspectiva clínica. Pesquisadores farmacêuticos alemães formularam hidrogéis bioativos sofisticados e minimamente invasivos (via injeção rápida). Este material líquido imita perfeitamente a cartilagem original, enganando o corpo, promovendo adesão celular massiva e induzindo as células do próprio indivíduo a recriar tecido cartilaginoso natural extinto.", institution: "Fraunhofer-Gesellschaft Institutes", source: "Revista Científica Nature Materials", image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80", imgCaption: "" },
+        { id: 5, title: "Micro-robô Magnético Renal", shortDesc: "Dissolução fulminante e sem cirurgia", iconClass: "fas fa-robot", category: "Micro-robótica", country: "Japão/Global", description: "Chega de cirurgias a laser exaustivas ou semanas dolorosas ingerindo água. Um micro-robô de polímero flexível (com menos de 1 centímetro) viaja pela uretra guiado milimetricamente por ímãs externos por médicos. Na ponta deste 'robô', uma carga agressiva da enzima urease ataca e corrói apenas e instantaneamente a pedra nos rins, dissolvendo-a em minutos.", institution: "Bioengenharia de Microrobótica Japonesa", source: "Estudos Avançados de Robótica Magnética", image: "https://images.unsplash.com/photo-1614064016629-9e735e0766a5?auto=format&fit=crop&w=800&q=80", imgCaption: "" },
+        { id: 6, title: "Nanobots Limpadores Arteriais", shortDesc: "Rasgadores de placas de gordura (Infarto)", iconClass: "fas fa-heartbeat", category: "Nanotecnologia", country: "Global", description: "Como desentupir canos entupidos antes que eles estoquem e causem morte súbita cardíaca? Nano-submarinos biomiméticos munidos de micro hélices e raspadores viajam pelo sangue até artérias bloqueadas pelo colesterol ruim (aterosclerose). O mecanismo literalmente fura ou dissolve clinicamente o lixo biológico das veias de forma não-tóxica, substituindo cirurgias delicadíssimas de inserção de stents (molas) cardíacos.", institution: "Pesquisas Universitárias em Nanomedicina", source: "Inovação Médica Futura / NanoTech", image: "https://images.unsplash.com/photo-1583912265922-83ef0a221fbc?auto=format&fit=crop&w=800&q=80", imgCaption: "" },
+        { id: 7, title: "Rastreio Oncológico via Cerúmen", shortDesc: "A cera de ouvido acusando o Câncer", iconClass: "fas fa-ear-listen", category: "Oncologia Translacional", country: "Brasil", description: "Tumores corporais mudam secretamente o metabolismo orgânico liberando gases específicos no sangue, muito antes de aparecerem em tomografias normais. Pesquisadores brilhantes em biologia brasileira descobriram que a cera do ouvido atua como uma 'esponja' capturando meses de histórico desses gases (VOCs). A mera raspagem da cera tornou-se, assim, um teste barato, 100% indolor e altamente sensível para antecipar tratamentos de câncer para a população do SUS.", institution: "Universidades Públicas Federais", source: "Jornal Nacional Globo / Pesquisa Fapesp", image: "https://images.unsplash.com/photo-1579684453423-f84349ef60b0?auto=format&fit=crop&w=800&q=80", imgCaption: "" },
+        { id: 8, title: "Veneno de Marimbondo (Paulista)", shortDesc: "Inibição do pesadelo chamado Alzheimer", iconClass: "fas fa-bug", category: "Farmacologia Florestal", country: "Brasil", description: "O maior calcanhar de Aquiles global da neurologia hoje é a Doença de Alzheimer e Parkinson, desencadeados por proteínas que formam placas 'tóxicas' matando os neurônios sadios. Extraído meticulosamente do perigoso marimbondo nativo 'Polybia paulista', químicos brasileiros isolaram peptídeos ativos da peçonha do inseto capazes de barrar vigorosamente a formação desta agregação neuronal na fase microscópica.", institution: "Santa Casa / CIDI / MedNucleo Brasil", source: "Neurologia Brasileira de Biodiversidade", image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80", imgCaption: "" }
+      ];
 
       return (
-        <div className="h-full flex flex-col flex-1">
-          <div className="mb-4 shrink-0"><InteractiveHint text="Deslize sobre os blocos e compare" /></div>
-          <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 mb-4 lg:mb-6 shrink-0">
-            <button onMouseEnter={() => setHoverArea('foreign')} className={`flex-1 p-3 lg:p-4 rounded-xl border-l-4 transition-all text-left flex items-center justify-between ${hoverArea === 'foreign' ? 'border-red-600 bg-red-50 shadow-md' : 'border-gray-200 bg-white'}`}>
-              <div>
-                <div className="flex items-baseline gap-2"><div className="text-2xl lg:text-3xl font-black text-red-600 mb-0.5">67.9%</div></div>
-                <div className="font-bold text-gray-900 uppercase tracking-wide text-[10px] lg:text-xs">Patentes Estrangeiras</div>
-              </div>
-              <i className={`fas fa-globe text-3xl lg:text-4xl ${hoverArea === 'foreign' ? 'text-red-400' : 'text-gray-300'}`}></i>
-            </button>
-            <button onMouseEnter={() => setHoverArea('domestic')} className={`flex-1 p-3 lg:p-4 rounded-xl border-l-4 transition-all text-left flex items-center justify-between ${hoverArea === 'domestic' ? 'border-blue-600 bg-blue-50 shadow-md' : 'border-gray-200 bg-white'}`}>
-              <div>
-                <div className="flex items-baseline gap-2"><div className="text-2xl lg:text-3xl font-black text-blue-600 mb-0.5">32.1%</div></div>
-                <div className="font-bold text-gray-900 uppercase tracking-wide text-[10px] lg:text-xs">Patentes Nacionais</div>
-              </div>
-              <i className={`fas fa-building text-3xl lg:text-4xl ${hoverArea === 'domestic' ? 'text-blue-400' : 'text-gray-300'}`}></i>
-            </button>
+        <div className="flex flex-col h-full flex-1">
+          <div className="mb-4 shrink-0">
+            <InteractiveHint text="Selecione um caso científico na lista para explorar a matriz da Inovação" />
           </div>
-          <div className="flex-1 bg-gray-900 rounded-3xl p-5 lg:p-8 text-white flex flex-col lg:flex-row gap-6 overflow-hidden shadow-xl min-h-[350px]">
-            <div className="flex-1 flex flex-col justify-between overflow-y-auto custom-scrollbar pr-2 z-10">
-              <div key={activeData.title} className="animate-fade-in">
-                <h3 className={`text-xl lg:text-2xl font-black mb-3 ${hoverArea === 'foreign' ? 'text-red-400' : 'text-blue-400'}`}>{activeData.title}</h3>
-                <div className="flex flex-col gap-2 mb-4 bg-white/5 p-3 rounded-lg border border-white/10">
-                  <div className="flex items-center gap-3">
-                     <span className={`text-2xl font-black ${hoverArea === 'foreign' ? 'text-red-300' : 'text-blue-300'}`}>{activeData.statsNumber}</span>
-                     <span className="text-[10px] lg:text-xs text-gray-300 font-bold uppercase tracking-wider">{activeData.statsLabel}</span>
+          
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 flex-1 overflow-hidden">
+            <div className="w-full lg:w-4/12 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto custom-scrollbar pb-2 lg:pr-3">
+              {innovations.map((inv, index) => (
+                <button 
+                  key={inv.id} onClick={() => setActiveInv(index)}
+                  className={`p-3 lg:p-4 rounded-xl border transition-all flex items-center gap-3 text-left min-w-[260px] lg:min-w-full shrink-0 group ${activeInv === index ? 'border-amber-500 bg-gray-900 shadow-xl lg:translate-x-2' : 'border-gray-300 bg-white hover:bg-gray-100 hover:border-gray-400'}`}
+                >
+                  <div className={`w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center rounded-lg shadow-inner border shrink-0 transition-colors ${activeInv === index ? 'bg-gray-800 border-gray-700 text-amber-400' : 'bg-gray-100 border-gray-200 text-gray-500 group-hover:bg-white'}`}>
+                    <i className={`${inv.iconClass} text-lg lg:text-xl`}></i>
                   </div>
-                  <p className="text-gray-300 leading-relaxed text-xs lg:text-sm mt-1">{activeData.text}</p>
-                </div>
-                <div className="mb-4">
-                  <span className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Principais Emissores</span>
-                  <div className="flex flex-wrap gap-2">
-                    {activeData.origins.map((orig, i) => (<span key={i} className="bg-gray-800 border border-gray-700 text-gray-200 text-[10px] lg:text-xs px-2 py-1 rounded-md flex items-center gap-1.5 font-medium">{orig.flag} {orig.c}</span>))}
+                  <div className="truncate flex-1">
+                    <span className={`block text-[9px] lg:text-[10px] font-black uppercase tracking-widest mb-1 ${activeInv === index ? 'text-amber-400' : 'text-blue-600'}`}>{inv.category}</span>
+                    <span className={`font-black text-xs lg:text-[15px] leading-tight truncate block ${activeInv === index ? 'text-white' : 'text-gray-900'}`}>{inv.title}</span>
+                    <span className={`text-[9px] lg:text-[10px] mt-1 font-bold uppercase tracking-wider block truncate ${activeInv === index ? 'text-gray-400' : 'text-gray-500'}`}>{inv.shortDesc}</span>
                   </div>
+                </button>
+              ))}
+            </div>
+
+            <div className="w-full lg:w-8/12 bg-black rounded-3xl overflow-hidden flex flex-col shadow-2xl min-h-[450px] relative border border-gray-800">
+              <div className="absolute inset-0 z-0">
+                 <img src={innovations[activeInv].image} alt={innovations[activeInv].imgCaption} className="w-full h-2/3 lg:h-full object-cover opacity-30 lg:opacity-50 animate-fade-in mask-image-b-gradient" key={`img-${activeInv}`} />
+                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-transparent"></div>
+              </div>
+
+              <div className="relative z-10 p-6 lg:p-10 flex flex-col h-full justify-end text-white overflow-y-auto custom-scrollbar animate-fade-in" key={`content-${activeInv}`}>
+                <div className="mb-auto hidden lg:flex justify-between items-start">
+                  <span className="bg-amber-500 text-black font-black text-[10px] uppercase tracking-widest px-4 py-1.5 rounded flex items-center gap-2 shadow-lg">
+                    <i className="fas fa-bolt"></i> Caso Disruptivo Aprovado
+                  </span>
+                  <span className="flex items-center gap-2 text-xs font-bold text-gray-300 uppercase tracking-widest bg-black/60 px-4 py-2 rounded-full border border-gray-700 backdrop-blur-md shadow-inner">
+                    <i className="fas fa-map-marker-alt text-amber-500"></i> {innovations[activeInv].country}
+                  </span>
                 </div>
-                <div className={`p-3 rounded-xl border-l-2 bg-white/5 ${hoverArea === 'foreign' ? 'border-red-500' : 'border-blue-500'}`}>
-                  <span className="block text-[10px] font-bold uppercase tracking-widest mb-1.5 text-gray-400"><i className="fas fa-bullseye mr-1"></i> Diagnóstico</span>
-                  <p className="text-xs lg:text-sm text-white font-medium">{activeData.action}</p>
+
+                <div className="mt-12 lg:mt-0">
+                  <h2 className="text-3xl lg:text-5xl font-black mb-3 leading-tight text-white drop-shadow-md">{innovations[activeInv].title}</h2>
+                  <h4 className="text-amber-400 text-sm lg:text-lg font-bold mb-6 tracking-wide drop-shadow-sm uppercase">"{innovations[activeInv].shortDesc}"</h4>
+                  
+                  <div className="bg-gray-900/80 backdrop-blur-xl border border-gray-700 p-6 rounded-3xl mb-6 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
+                    <span className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-3 border-b border-gray-700 pb-2"><i className="fas fa-microscope text-gray-400"></i> Desdobramento Técnico</span>
+                    <p className="text-gray-200 text-sm lg:text-base leading-relaxed text-justify">{innovations[activeInv].description}</p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 bg-black/50 p-4 rounded-2xl border border-gray-800">
+                    <div>
+                      <span className="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1.5">Mapeado Por / Fonte</span>
+                      <span className="flex items-center gap-2 font-black text-sm text-gray-100">
+                        <i className="fas fa-building text-blue-500"></i> {innovations[activeInv].institution}
+                      </span>
+                      <div className="mt-2"><SourceBadge source={innovations[activeInv].source} dark={true} /></div>
+                    </div>
+                    
+                    <a href={`https://www.google.com/search?q=${encodeURIComponent(innovations[activeInv].title + ' ' + innovations[activeInv].institution)}`} 
+                       target="_blank" rel="noopener noreferrer"
+                       className="flex items-center justify-center gap-2 bg-white text-black px-6 py-3 lg:py-4 rounded-xl font-black text-[10px] lg:text-xs uppercase tracking-widest hover:bg-amber-400 transition-all duration-300 shadow-xl group shrink-0 no-underline hover:scale-105">
+                      <i className="fas fa-external-link-alt text-gray-500 group-hover:text-black transition-colors"></i> Validar Artigo Original
+                    </a>
+                  </div>
+                  
+                  <span className="block text-[9px] text-gray-600 italic mt-5 text-right font-medium tracking-wide">
+                    {innovations[activeInv].imgCaption}
+                  </span>
                 </div>
               </div>
-              <div className="mt-3 shrink-0"><SourceBadge source={activeData.source} /></div>
-            </div>
-            <div className="w-full lg:w-1/3 hidden sm:flex flex-col z-10 h-32 lg:h-auto shrink-0">
-               <div className="flex-1 rounded-xl overflow-hidden border border-gray-700 bg-black">
-                  <img src={activeData.image} alt={activeData.imgCaption} className="w-full h-full object-cover opacity-70" />
-               </div>
-               <span className="text-[9px] text-gray-500 italic mt-1 text-center">{activeData.imgCaption}</span>
             </div>
           </div>
         </div>
       );
     };
 
-    const GlobalSolutionsCenters = () => {
-      const [activeCenter, setActiveCenter] = useState(0);
-      const centers = [
-        { country: 'Alemanha', flag: '🇩🇪', institution: 'Fraunhofer-Gesellschaft', iconClass: "fas fa-microscope", title: 'Biomanufatura 3D', desc: 'Desenvolvem a biomanufatura 3D de tecidos e próteses biônicas perfeitamente integradas ao sistema nervoso.', impact: 'Integração entre a indústria de precisão e a saúde regenerativa.', source: 'Fraunhofer Institute', image: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=500&q=80', imgCaption: '[Engenharia de tecidos 3D]' },
-        { country: 'China', flag: '🇨🇳', institution: 'Hospitais 5G', iconClass: "fas fa-microchip", title: 'Hospitais Autônomos', desc: 'A China escala a inovação com redes 5G, criando hospitais onde a triagem primária e o monitoramento são feitos 100% por robôs e algoritmos.', impact: 'Modelos de IA treinados na escala de bilhões para diagnóstico.', source: 'China Health Policy', image: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&w=500&q=80', imgCaption: '[Robô autônomo hospitalar]' },
-        { country: 'Índia', flag: '🇮🇳', institution: 'Inovadores Locais', iconClass: "fas fa-bolt", title: 'Diagnóstico Portátil', desc: 'Cientistas indianos redesenham equipamentos caros para versões portáteis de baixo custo (ex: ECG de U$ 10 integrados a smartphones).', impact: 'Democratização radical: tecnologias acessíveis no Sul Global.', source: 'Centre for Cellular Platforms', image: 'https://images.unsplash.com/photo-1532187643603-c76088e5e6e6?auto=format&fit=crop&w=500&q=80', imgCaption: '[Dispositivo médico portátil]' },
-        { country: 'Brasil', flag: '🇧🇷', institution: 'Fiocruz', iconClass: "fas fa-shield-virus", title: 'Vigilância Genômica', desc: 'A Fiocruz lidera o desenvolvimento e a produção nacional de vacinas e soros, garantindo a soberania biológica do SUS.', impact: 'Redução da dependência internacional de insumos biológicos.', source: 'Ministério da Saúde / Fiocruz', image: 'https://images.unsplash.com/photo-1584362917165-526a968579e8?auto=format&fit=crop&w=500&q=80', imgCaption: '[Laboratório de vacinas]' }
-      ];
+    // --- PAINEL 5: BRASIL VS MUNDO ---
+    const BrazilianPatentsParadox = () => {
+      const [hoverArea, setHoverArea] = useState('foreign');
+      const data = {
+        foreign: { title: "O Domínio Estrangeiro", statsNumber: "21.073", statsLabel: "Depósitos Estrangeiros Acumulados", text: "Mais de dois terços da tecnologia de ponta protegida no Brasil pertencem a corporações globais. Isso encarece monstruosamente os custos logísticos do SUS devido aos pagamentos de royalties vitais e alta volatilidade cambial do dólar.", origins: [{ c: "Estados Unidos", flag: "🇺🇸" }, { c: "Alemanha", flag: "🇩🇪" }, { c: "Suíça", flag: "🇨🇭" }, { c: "China", flag: "🇨🇳" }], action: "A estratégia Macro deve migrar para atração de matrizes industriais estrangeiras através de Parcerias Público-Privadas (PPPs) em solo nacional focadas em transferência de tecnologia cruzada.", source: "INPI Brasil 2025 / Panorama Macroeconômico", image: "https://images.unsplash.com/photo-1587370560942-ad2a04eabb6d?auto=format&fit=crop&w=500&q=80", imgCaption: "" },
+        domestic: { title: "A Ciência Solitária", statsNumber: "9.963", statsLabel: "Depósitos Nacionais de Risco", text: "A biotecnologia brasileira brota quase que unicamente do orçamento das Universidades Públicas, que são as donas absolutas das patentes do país. O maior obstáculo econômico local atende pelo nome de 'Vale da Morte': a incapacidade burocrática de levar a pesquisa de prateleira acadêmica para a fabricação ágil industrial.", origins: [{ c: "USP (SP)", flag: "📍" }, { c: "UFCG (PB)", flag: "📍" }, { c: "UFMG (MG)", flag: "📍" }, { c: "UFG (GO)", flag: "📍" }], action: "Integração agressiva de laboratórios acadêmicos federais com Venture Capital (Fundos Privados), criando leis facilitadoras para cientistas escalarem comercialmente suas startups.", source: "Observatório de Inovação de Base / Data SUS", image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=500&q=80", imgCaption: "" }
+      };
+      const activeData = hoverArea === 'foreign' ? data.foreign : data.domestic;
 
       return (
-        <div className="flex flex-col h-full flex-1">
-          <div className="mb-4 shrink-0">
-            <InteractiveHint text="Selecione um país" />
+        <div className="h-full flex flex-col flex-1">
+          <div className="mb-4 shrink-0"><InteractiveHint text="Deslize sobre os blocos para debater os números absolutos do país" /></div>
+          
+          <div className="flex flex-col sm:flex-row gap-3 lg:gap-5 mb-4 lg:mb-6 shrink-0">
+            <button onMouseEnter={() => setHoverArea('foreign')} className={`flex-1 p-4 lg:p-6 rounded-2xl border-l-[6px] transition-all text-left flex items-center justify-between ${hoverArea === 'foreign' ? 'border-red-600 bg-red-50 shadow-lg scale-[1.01]' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
+              <div>
+                <div className="flex items-baseline gap-2"><div className="text-3xl lg:text-5xl font-black text-red-600 mb-1 tracking-tighter leading-none">67.9%</div></div>
+                <div className="font-bold text-gray-800 uppercase tracking-widest text-[10px] lg:text-xs mt-1">Patentes Estrangeiras</div>
+              </div>
+              <i className={`fas fa-globe-americas text-4xl lg:text-6xl ${hoverArea === 'foreign' ? 'text-red-300' : 'text-gray-200'}`}></i>
+            </button>
+            
+            <button onMouseEnter={() => setHoverArea('domestic')} className={`flex-1 p-4 lg:p-6 rounded-2xl border-l-[6px] transition-all text-left flex items-center justify-between ${hoverArea === 'domestic' ? 'border-blue-600 bg-blue-50 shadow-lg scale-[1.01]' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
+              <div>
+                <div className="flex items-baseline gap-2"><div className="text-3xl lg:text-5xl font-black text-blue-600 mb-1 tracking-tighter leading-none">32.1%</div></div>
+                <div className="font-bold text-gray-800 uppercase tracking-widest text-[10px] lg:text-xs mt-1">Pesquisa Nacional</div>
+              </div>
+              <i className={`fas fa-university text-4xl lg:text-6xl ${hoverArea === 'domestic' ? 'text-blue-300' : 'text-gray-200'}`}></i>
+            </button>
           </div>
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 flex-1 overflow-hidden">
-            <div className="w-full lg:w-4/12 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto custom-scrollbar pb-2 lg:pr-2">
-              {centers.map((center, index) => (
-                <button 
-                  key={index} onClick={() => setActiveCenter(index)}
-                  className={`p-3 lg:p-4 rounded-xl border-2 transition-all flex items-center gap-3 text-left min-w-[200px] lg:min-w-full shrink-0 ${activeCenter === index ? 'border-blue-600 bg-blue-50 shadow-md lg:translate-x-1' : 'border-gray-200 bg-white hover:bg-gray-50'}`}
-                >
-                  <div className="text-xl lg:text-2xl bg-white p-1.5 lg:p-2 rounded-lg shadow-sm border border-gray-100 shrink-0">{center.flag}</div>
-                  <div className="truncate">
-                    <span className={`block text-[9px] lg:text-xs font-bold uppercase tracking-widest mb-0.5 ${activeCenter === index ? 'text-blue-600' : 'text-gray-400'}`}>{center.country}</span>
-                    <span className={`font-bold text-xs lg:text-sm leading-tight truncate ${activeCenter === index ? 'text-gray-900' : 'text-gray-700'}`}>{center.institution}</span>
+          
+          <div className="flex-1 bg-gray-900 rounded-3xl p-6 lg:p-10 text-white flex flex-col lg:flex-row gap-8 overflow-hidden shadow-2xl min-h-[400px] border border-gray-800 relative">
+            <div className="flex-1 flex flex-col justify-between overflow-y-auto custom-scrollbar pr-3 z-10">
+              <div key={activeData.title} className="animate-fade-in">
+                <h3 className={`text-2xl lg:text-4xl font-black mb-6 leading-tight tracking-tight ${hoverArea === 'foreign' ? 'text-red-400' : 'text-blue-400'}`}>{activeData.title}</h3>
+                
+                <div className="flex flex-col gap-2 mb-6 bg-gray-800 p-5 rounded-2xl border border-gray-700 shadow-inner">
+                  <div className="flex items-center gap-3">
+                     <span className={`text-3xl lg:text-4xl font-black ${hoverArea === 'foreign' ? 'text-red-300' : 'text-blue-300'}`}>{activeData.statsNumber}</span>
+                     <span className="text-[10px] lg:text-xs text-gray-400 font-black uppercase tracking-widest leading-tight w-24 border-l border-gray-600 pl-3">{activeData.statsLabel}</span>
                   </div>
-                </button>
-              ))}
-            </div>
+                  <p className="text-gray-200 leading-relaxed text-sm lg:text-base mt-4 font-medium">{activeData.text}</p>
+                </div>
 
-            <div className="w-full lg:w-8/12 bg-gray-900 rounded-3xl overflow-hidden flex flex-col lg:flex-row shadow-xl min-h-[350px]">
-              <div className="flex-1 p-5 lg:p-8 flex flex-col justify-between text-white relative z-10 overflow-y-auto custom-scrollbar">
-                <div key={centers[activeCenter].title}>
-                  <div className="flex items-center gap-2 mb-3 text-blue-400">
-                    <i className={`${centers[activeCenter].iconClass} text-lg`}></i>
-                    <span className="text-[10px] font-bold uppercase tracking-widest border border-blue-400/30 px-2 py-0.5 rounded-full bg-blue-400/10 shrink-0">Destaque</span>
-                  </div>
-                  <h3 className="text-xl lg:text-2xl font-black mb-3 leading-tight text-white">{centers[activeCenter].title}</h3>
-                  <p className="text-gray-300 text-xs lg:text-sm leading-relaxed mb-4 border-l-2 border-gray-600 pl-3">
-                    {centers[activeCenter].desc}
-                  </p>
-                  <div className="bg-white/10 p-3 rounded-xl border border-white/10 shadow-inner">
-                    <span className="block text-[10px] text-amber-400 font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><i className="fas fa-bullseye"></i> Impacto</span>
-                    <p className="text-xs lg:text-sm text-gray-100 font-medium">{centers[activeCenter].impact}</p>
+                <div className="mb-6">
+                  <span className="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3"><i className="fas fa-flag text-gray-600"></i> Polos Emissores</span>
+                  <div className="flex flex-wrap gap-2">
+                    {activeData.origins.map((orig, i) => (<span key={i} className="bg-black border border-gray-700 text-gray-300 text-[10px] lg:text-xs px-3 py-1.5 rounded-lg flex items-center gap-2 font-bold shadow-md">{orig.flag} {orig.c}</span>))}
                   </div>
                 </div>
-                <div className="mt-4 shrink-0"><SourceBadge source={centers[activeCenter].source} /></div>
+
+                <div className={`p-5 rounded-2xl border-l-4 bg-black/50 backdrop-blur-sm ${hoverArea === 'foreign' ? 'border-red-500' : 'border-blue-500'}`}>
+                  <span className="block text-[10px] font-black uppercase tracking-widest mb-2 text-gray-400"><i className="fas fa-lightbulb mr-1 text-amber-400"></i> Diagnóstico de Estado</span>
+                  <p className="text-sm lg:text-base text-gray-100 font-medium leading-relaxed">{activeData.action}</p>
+                </div>
               </div>
-              
-              <div className="w-full lg:w-2/5 h-48 lg:h-auto bg-black relative shrink-0">
-                 <img src={centers[activeCenter].image} alt={centers[activeCenter].imgCaption} className="absolute inset-0 w-full h-full object-cover opacity-60" />
-                 <div className="absolute bottom-2 left-0 right-0 px-2">
-                    <span className="block text-[9px] text-center text-gray-300 bg-black/60 backdrop-blur-sm p-1 rounded italic">{centers[activeCenter].imgCaption}</span>
-                 </div>
-              </div>
+              <div className="mt-5 shrink-0"><SourceBadge source={activeData.source} dark={true} /></div>
             </div>
+            
+            <div className="w-full lg:w-1/3 hidden sm:flex flex-col z-10 h-40 lg:h-auto shrink-0 mt-2">
+               <div className="flex-1 rounded-2xl overflow-hidden border border-gray-700 bg-black shadow-lg">
+                  <img src={activeData.image} alt={activeData.imgCaption} className="w-full h-full object-cover opacity-50 hover:opacity-100 transition-opacity duration-700 ease-in-out" />
+               </div>
+               <span className="text-[9px] text-gray-500 italic mt-3 text-center bg-gray-800 p-2 rounded-lg font-medium">{activeData.imgCaption}</span>
+            </div>
+            
+            <i className={`fas fa-chart-pie absolute -bottom-16 -right-16 text-[300px] opacity-[0.03] pointer-events-none z-0 ${hoverArea === 'foreign' ? 'text-red-500' : 'text-blue-500'}`}></i>
           </div>
         </div>
       );
@@ -467,53 +426,65 @@
     const GoiasTrend = () => {
       const [activeStep, setActiveStep] = useState(2);
       const timeline = [
-        { year: 'Fase 1', title: 'Dados SUS', metric: 'HL7 FHIR', desc: 'Pioneirismo FHIR: prontuários unificados para IA.', strategic: 'Fundação estrutural de dados limpos.', source: 'SES-GO', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80', imgCaption: '[Dashboard]' },
-        { year: 'Fase 2', title: 'Academia-Gov', metric: 'R$ 14.6M', desc: 'Aporte na UFG para validar biotecnologia local no SUS.', strategic: 'Pesquisa vira produto testado clinicamente.', source: 'Fapeg', image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=500&q=80', imgCaption: '[Pesquisa]' },
-        { year: 'Fase 3', title: 'HealthTechs', metric: '+29%', desc: 'Crescimento explosivo de startups fundindo Agro à Saúde.', strategic: 'Ecossistema apoiado por Venture Capital.', source: 'Hub Goiás', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32b7?auto=format&fit=crop&w=500&q=80', imgCaption: '[Ecossistema]' }
+        { year: 'Fase 1 (A Base)', title: 'Consolidação de Dados', metric: 'HL7 FHIR', desc: 'A inovação artificial começa com dados bem catalogados. O Governo de Goiás instalou o protocolo universal FHIR. Prontuários e exames de ponta a ponta do SUS foram unificados em uma nuvem hiper-segura governamental.', strategic: 'Premiado no Abep-Tic, o sistema tirou Goiás da idade do papel. Prepara a fundação técnica exata e legal para a Inteligência Artificial ser acoplada.', source: 'Prêmio Abep-Tic Gov / SES-GO', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { year: 'Fase 2 (Fomento)', title: 'União Academia-Estado', metric: 'R$ 14.6M', desc: 'Com o banco de dados pronto, faltava capital. Uma linha de crédito milionária pesada e exclusiva foi aberta pela Fapeg dedicada apenas ao "Ceti-Saúde" da imensa base acadêmica da Universidade Federal de Goiás (UFG).', strategic: 'Esse movimento cirúrgico tirou a ciência goiana da gaveta (papers) e os empurrou para testar moléculas em ensaios com os pacientes da rede assistencial.', source: 'Secretaria e Fundação Fapeg Goiás', image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=500&q=80', imgCaption: '' },
+        { year: 'Fase 3 (Maturidade)', title: 'O Boom de HealthTechs', metric: '+29%', desc: 'A infraestrutura somada ao dinheiro governamental gerou um ímã de mentes brilhantes. Goiás assistiu a um "boom" silencioso e vertiginoso de bio-startups em um único ano. O Agro injetou sua inteligência orgânica gerando startups One Health.', strategic: 'Formação do Hub Goiás com aporte extra de 30 Milhões focado quase inteiramente em blindar o empreendedorismo e barrar a fuga de cientistas para São Paulo.', source: 'Balanço Sebrae Health / Hub Goiás', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32b7?auto=format&fit=crop&w=500&q=80', imgCaption: '' }
       ];
 
       return (
         <div className="h-full flex flex-col flex-1 justify-center">
-          <div className="mb-4 lg:mb-8 shrink-0"><InteractiveHint text="Navegue pela linha" /></div>
-          <div className="relative mb-6 lg:mb-10 px-4 lg:px-10 shrink-0">
-            <div className="absolute top-1/2 left-4 right-4 lg:left-10 lg:right-10 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
-            <div className="absolute top-1/2 left-4 lg:left-10 h-1 bg-blue-600 -translate-y-1/2 z-0 transition-all duration-700" style={{ width: `${(activeStep / (timeline.length - 1)) * 100}%` }}></div>
+          <div className="mb-6 lg:mb-10 shrink-0"><InteractiveHint text="Navegue pelas 3 etapas que transformaram a matriz goiana" /></div>
+          
+          <div className="relative mb-8 lg:mb-14 px-4 lg:px-12 shrink-0">
+            <div className="absolute top-1/2 left-4 right-4 lg:left-12 lg:right-12 h-1.5 bg-gray-200 -translate-y-1/2 z-0 rounded-full"></div>
+            <div className="absolute top-1/2 left-4 lg:left-12 h-1.5 bg-blue-600 -translate-y-1/2 z-0 transition-all duration-[800ms] rounded-full" style={{ width: `${(activeStep / (timeline.length - 1)) * 100}%` }}></div>
             <div className="relative z-10 flex justify-between">
               {timeline.map((item, index) => (
-                <button key={index} onClick={() => setActiveStep(index)} className="flex flex-col items-center focus:outline-none relative w-16 lg:w-24">
-                  <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-full border-[4px] lg:border-[5px] flex items-center justify-center transition-all duration-300 z-10 ${activeStep >= index ? 'border-blue-600 bg-white' : 'border-gray-300 bg-white'}`}>
-                    {activeStep === index && <div className="w-2.5 h-2.5 lg:w-3.5 lg:h-3.5 bg-blue-600 rounded-full animate-pulse" />}
+                <button key={index} onClick={() => setActiveStep(index)} className="flex flex-col items-center focus:outline-none relative w-20 lg:w-32 group">
+                  <div className={`w-10 h-10 lg:w-14 lg:h-14 rounded-full border-[5px] lg:border-[6px] flex items-center justify-center transition-all duration-500 z-10 shadow-md ${activeStep >= index ? 'border-blue-600 bg-white scale-110' : 'border-gray-300 bg-gray-100 group-hover:border-blue-300 group-hover:bg-white'}`}>
+                    {activeStep === index && <div className="w-3 h-3 lg:w-4 lg:h-4 bg-blue-600 rounded-full animate-pulse shadow-inner" />}
                   </div>
-                  <div className={`mt-2 text-center text-[9px] lg:text-xs uppercase font-bold transition-colors ${activeStep === index ? 'text-blue-700' : 'text-gray-400'}`}>{item.year}</div>
+                  <div className={`mt-3 lg:mt-4 text-center text-[10px] lg:text-xs uppercase font-black transition-colors duration-300 bg-white/80 px-2 py-1 rounded backdrop-blur-sm ${activeStep === index ? 'text-blue-800 shadow-sm' : 'text-gray-400'}`}>{item.year}</div>
                 </button>
               ))}
             </div>
           </div>
-          <div className="bg-white border border-gray-200 rounded-3xl flex-1 flex flex-col sm:flex-row overflow-hidden shadow-lg min-h-[250px]">
-            <div className="flex-1 p-5 lg:p-8 flex flex-col justify-between overflow-y-auto custom-scrollbar">
-              <div>
-                <div className="flex items-center gap-3 mb-3">
-                   <div className="bg-blue-600 text-white px-3 py-1.5 rounded-lg font-black text-lg lg:text-xl shadow-inner">{timeline[activeStep].metric}</div>
+          
+          <div className="bg-white border border-gray-200 rounded-3xl flex-1 flex flex-col sm:flex-row overflow-hidden shadow-2xl min-h-[300px]">
+            <div className="flex-1 p-6 lg:p-10 flex flex-col justify-between overflow-y-auto custom-scrollbar relative">
+              <i className="fas fa-quote-left absolute top-5 right-5 text-gray-100 text-6xl z-0"></i>
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-5">
+                   <div className="bg-gradient-to-br from-blue-600 to-blue-800 text-white px-5 py-2 rounded-xl font-black text-xl lg:text-3xl shadow-lg border border-blue-500">{timeline[activeStep].metric}</div>
+                   <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest bg-gray-100 px-3 py-1.5 rounded-full border border-gray-200 shadow-sm"><i className="fas fa-flag text-blue-500 mr-1.5"></i> Métrica Pivotante</span>
                 </div>
-                <h3 className="text-xl lg:text-2xl font-black text-gray-900 mb-2">{timeline[activeStep].title}</h3>
-                <p className="text-xs lg:text-sm text-gray-700 leading-relaxed mb-4">{timeline[activeStep].desc}</p>
-                <div className="bg-blue-50 border-l-2 border-blue-600 p-2.5 rounded-r-lg mb-3">
-                   <span className="block text-[9px] lg:text-[10px] font-bold uppercase tracking-widest text-blue-800 mb-1">Visão Estratégica</span>
-                   <p className="text-xs text-blue-900 font-medium">{timeline[activeStep].strategic}</p>
+                <h3 className="text-2xl lg:text-4xl font-black text-gray-900 mb-4 tracking-tight leading-none">{timeline[activeStep].title}</h3>
+                <p className="text-sm lg:text-base text-gray-600 leading-relaxed mb-6 font-medium text-justify">{timeline[activeStep].desc}</p>
+                
+                <div className="bg-blue-50/80 border-l-4 border-blue-600 p-4 lg:p-5 rounded-r-2xl mb-4 shadow-inner">
+                   <span className="block text-[10px] lg:text-[11px] font-black uppercase tracking-widest text-blue-500 mb-2.5 flex items-center gap-2"><i className="fas fa-chess-knight"></i> Execução Silenciosa</span>
+                   <p className="text-xs lg:text-sm text-blue-900 font-bold leading-relaxed">{timeline[activeStep].strategic}</p>
                 </div>
               </div>
-              <div className="shrink-0"><SourceBadge source={timeline[activeStep].source} /></div>
+              <div className="shrink-0 mt-4 relative z-10"><SourceBadge source={timeline[activeStep].source} /></div>
             </div>
-            <div className="w-full sm:w-2/5 h-32 sm:h-auto bg-gray-100 hidden sm:flex flex-col shrink-0">
-               <img src={timeline[activeStep].image} alt={timeline[activeStep].imgCaption} className="w-full h-full object-cover" key={timeline[activeStep].image} />
-               <div className="bg-gray-900 text-gray-400 text-[9px] p-1.5 text-center italic">{timeline[activeStep].imgCaption}</div>
+            
+            <div className="w-full sm:w-2/5 h-40 sm:h-auto bg-gray-100 hidden sm:flex flex-col shrink-0 relative border-l border-gray-100">
+               <img src={timeline[activeStep].image} alt={timeline[activeStep].imgCaption} className="w-full h-full object-cover animate-fade-in filter contrast-110" key={timeline[activeStep].image} />
+               <div className="absolute bottom-4 left-4 right-4">
+                 <div className="bg-black/80 backdrop-blur-md text-gray-200 text-[9px] lg:text-[10px] p-2 text-center italic rounded-lg border border-gray-700 shadow-xl font-medium tracking-wide">
+                   {timeline[activeStep].imgCaption}
+                 </div>
+               </div>
             </div>
           </div>
         </div>
       );
     };
 
-    // --- MAIN APP ---
+    // ==========================================
+    // APP PRINCIPAL (CONTROLE DE ROTA)
+    // ==========================================
     function App() {
       const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -522,25 +493,26 @@
           id: "capa",
           render: () => (
             <SlideContainer>
-              <div className="flex flex-col justify-center h-full max-w-4xl relative z-10 py-10">
+              <div className="flex flex-col justify-center h-full max-w-4xl relative z-10 py-10 lg:py-16">
                 <div className="flex items-center gap-3 mb-6">
-                  <i className="fas fa-heartbeat text-blue-600 text-2xl"></i>
-                  <span className="text-blue-600 font-bold tracking-widest uppercase text-[10px] lg:text-sm border border-blue-200 px-3 py-1 rounded-full bg-blue-50">Dossiê 2025-2026</span>
+                  <div className="bg-blue-100 p-3 rounded-2xl shadow-sm border border-blue-200"><i className="fas fa-heartbeat text-blue-600 text-3xl lg:text-4xl"></i></div>
+                  <span className="text-blue-700 font-black tracking-widest uppercase text-xs lg:text-sm border border-blue-300 px-4 py-1.5 rounded-full bg-blue-50/50 shadow-sm">Estudo Analítico Exclusivo • 2025-2026</span>
                 </div>
-                <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-gray-900 leading-[1.1] mb-6 tracking-tight">
-                  A Nova Fronteira da <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500 block sm:inline">Inovação em Saúde</span>
+                <h1 className="text-5xl md:text-6xl lg:text-8xl font-black text-gray-900 leading-[1.05] mb-6 tracking-tighter">
+                  A Nova Fronteira da <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-blue-700 to-teal-500 block sm:inline mt-2 drop-shadow-sm">Inovação em Saúde</span>
                 </h1>
-                <p className="text-base md:text-lg lg:text-2xl text-gray-600 font-light max-w-3xl leading-relaxed mb-10">
-                  Uma visão executiva sobre a IA Médica, soluções clínicas disruptivas, o abismo de patentes e o <strong>despertar de Goiás como potência em saúde digital</strong>.
+                <p className="text-lg md:text-xl lg:text-2xl text-gray-600 font-medium max-w-3xl leading-relaxed mb-12">
+                  Uma imersão executiva embasada em dados: do mercado trilionário da <strong className="text-gray-900 border-b-2 border-amber-400">IA Médica Global</strong> aos bastidores dos maiores <strong>Hospitais do mundo</strong>, revelando o salto estrutural sem precedentes do estado de <strong>Goiás</strong>.
                 </p>
-                <div className="flex items-center gap-4 text-[10px] lg:text-xs font-bold text-gray-400 uppercase tracking-widest mt-auto shrink-0">
+                <div className="flex items-center gap-4 text-xs font-black text-gray-500 uppercase tracking-widest mt-auto shrink-0 bg-gray-100/80 backdrop-blur-sm w-max px-5 py-2.5 rounded-xl border border-gray-200 shadow-sm">
                   <div className="flex gap-2">
-                     <kbd className="px-2 py-1 bg-white border border-gray-300 rounded text-gray-600">←</kbd>
-                     <kbd className="px-2 py-1 bg-white border border-gray-300 rounded text-gray-600">→</kbd>
+                     <kbd className="px-2.5 py-1 bg-white border border-gray-300 rounded-md text-gray-800 shadow-sm">←</kbd>
+                     <kbd className="px-2.5 py-1 bg-white border border-gray-300 rounded-md text-gray-800 shadow-sm">→</kbd>
                   </div>
-                  Navegue com botões ou teclado
+                  Navegue com seu teclado para avançar
                 </div>
               </div>
+              <i className="fas fa-dna absolute top-10 right-10 text-[400px] text-gray-100 opacity-40 pointer-events-none -rotate-12 z-0"></i>
             </SlideContainer>
           )
         },
@@ -548,89 +520,106 @@
           id: "contexto-global",
           render: () => (
             <SlideContainer>
-              <div className="flex justify-between items-end mb-4 shrink-0">
-                <h2 className="text-2xl lg:text-4xl font-black text-gray-900 flex items-center gap-2"><span className="text-blue-600">1.</span> A Inflexão Global</h2>
-                <i className="fas fa-brain text-4xl text-gray-300 hidden sm:block"></i>
+              <div className="flex justify-between items-end mb-6 shrink-0 border-b border-gray-200 pb-4">
+                <h2 className="text-3xl lg:text-5xl font-black text-gray-900 flex items-center gap-4 tracking-tight"><span className="bg-gradient-to-br from-blue-600 to-blue-800 text-white w-10 h-10 lg:w-14 lg:h-14 flex items-center justify-center rounded-xl shadow-lg text-xl lg:text-3xl border border-blue-500">1</span> A Inflexão Econômica Global</h2>
+                <i className="fas fa-brain text-5xl lg:text-6xl text-gray-200 hidden sm:block drop-shadow-sm"></i>
               </div>
-              <p className="text-sm lg:text-base text-gray-600 mb-6 max-w-4xl border-l-4 border-gray-200 pl-4 shrink-0">A IA transacionou de "custo experimental" para o centro da eficiência preditiva em triagem e genômica.</p>
-              <div className="flex flex-col md:flex-row gap-4 lg:gap-6 flex-1">
-                <InteractiveStatCard iconClass="fas fa-chart-line" color="text-blue-600" bg="bg-blue-50" number="US$ 504 Bi" text="Mercado de IA na Saúde (2032)" insightDetail="O salto de US$ 39Bi (2025) é guiado pela descoberta algorítmica de fármacos." source="Grand View Research" />
-                <InteractiveStatCard iconClass="fas fa-globe" color="text-emerald-600" bg="bg-emerald-50" number="49%" text="Domínio da América do Norte" insightDetail="Concentração gerada por alianças entre Big Techs e Hospitais para treinar modelos fundacionais." source="MarketWatch" />
-                <div className="p-5 lg:p-6 rounded-2xl bg-gray-900 text-white flex flex-col justify-between border border-gray-800 flex-1 min-h-[200px]">
-                  <div>
-                    <h3 className="text-lg lg:text-xl font-bold mb-2 text-amber-400">"Inovação Reversa"</h3>
-                    <p className="text-gray-300 text-xs lg:text-sm leading-relaxed mb-3">Soluções frugais criadas na África invadem hospitais americanos para cortar custos básicos.</p>
+              <p className="text-base lg:text-lg text-gray-600 mb-8 max-w-4xl border-l-4 border-gray-300 pl-5 shrink-0 font-medium leading-relaxed bg-gray-50 p-4 rounded-r-xl">
+                A tecnologia na saúde deixou de ser um CapEx arriscado e se tornou a matriz real de redução de custo clínico em escala. De algoritmos preditivos salvando vidas em UTIs à descoberta bilionária de fármacos via IA Generativa em tempo recorde.
+              </p>
+              <div className="flex flex-col md:flex-row gap-5 lg:gap-8 flex-1">
+                <InteractiveStatCard iconClass="fas fa-chart-pie" color="text-blue-600" bg="bg-blue-50" number="US$ 504 Bi" text="Mercado de IA na Saúde (2032)" insightDetail="O salto massivo de US$ 39Bi (2025) reflete o uso acelerado de IA Generativa por farmacêuticas de elite (Drug Discovery) para prever dobraduras de proteínas, economizando bilhões em testes cegos de laboratório." source="Grand View Research & Statista 2025" />
+                <InteractiveStatCard iconClass="fas fa-globe-americas" color="text-emerald-600" bg="bg-emerald-50" number="49%" text="Monopólio da América do Norte" insightDetail="Metade de todo o faturamento mundial e avanço reside no eixo EUA-Canadá. Isso é alavancado pelas Big Techs (Alphabet, AWS, Apple) que estão processando dados de gigantescos hospitais privados locais." source="MarketWatch Health IT Report 2025" />
+                <div className="p-6 lg:p-8 rounded-3xl bg-gray-900 text-white flex flex-col justify-between border border-gray-800 flex-1 min-h-[220px] shadow-2xl relative overflow-hidden group">
+                  <div className="relative z-10">
+                    <div className="inline-block bg-amber-400 text-gray-900 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded mb-4 shadow-sm">Tendência</div>
+                    <h3 className="text-xl lg:text-2xl font-black mb-3 text-white flex items-center gap-2"><i className="fas fa-retweet text-amber-400"></i> "Inovação Reversa"</h3>
+                    <p className="text-gray-300 text-xs lg:text-sm leading-relaxed mb-3 font-medium">Soluções frugais (de altíssimo impacto clínico, mas de custo de hardware ultrabaixo) criadas nas duras frentes da África provaram tanto valor que estão retornando aos grandes hospitais dos EUA para conter o desperdício de insumos diário.</p>
                   </div>
-                  <SourceBadge source="Fórum Econômico Mundial" />
+                  <div className="mt-auto relative z-10 pt-4 border-t border-gray-700"><SourceBadge source="Fórum Econômico Mundial" dark={true} /></div>
+                  <i className="fas fa-hand-holding-medical absolute -bottom-5 -right-5 text-gray-700 opacity-20 text-[120px] group-hover:scale-110 transition-transform duration-500"></i>
                 </div>
               </div>
             </SlideContainer>
           )
         },
-        { id: "grafico-patentes", headerTitle: "Corrida Estratégica", headerIcon: "fas fa-chart-bar", render: () => <SlideContainer><InteractiveBarChart /></SlideContainer> },
-        { id: "grafico-hospitais", headerTitle: "Vanguarda Hospitalar", headerIcon: "fas fa-trophy", render: () => <SlideContainer><RankingHospitals /></SlideContainer> },
-        { id: "grafico-disruptivas", headerTitle: "Fronteiras da Medicina", headerIcon: "fas fa-syringe", render: () => <SlideContainer bg="bg-gray-900"><DisruptiveInnovations /></SlideContainer> },
-        { id: "grafico-solucoes", headerTitle: "Centros de Pesquisa Aplicada", headerIcon: "fas fa-vial", render: () => <SlideContainer><GlobalSolutionsCenters /></SlideContainer> },
-        { id: "grafico-brasil", headerTitle: "Raio-X Brasil", headerIcon: "fas fa-chart-pie", render: () => <SlideContainer><BrazilianPatentsParadox /></SlideContainer> },
+        { id: "grafico-patentes", headerTitle: "Corrida Macro Estratégica Mundial", headerIcon: "fas fa-chart-column", render: () => <SlideContainer><InteractiveBarChart /></SlideContainer> },
+        { id: "grafico-hospitais", headerTitle: "Vanguarda Hospitalar Global", headerIcon: "fas fa-trophy", render: () => <SlideContainer><RankingHospitals /></SlideContainer> },
+        { id: "grafico-disruptivas", headerTitle: "Fronteiras da Ciência (Disruptiva)", headerIcon: "fas fa-vial-virus", render: () => <SlideContainer bg="bg-gray-900"><DisruptiveInnovations /></SlideContainer> },
+        { id: "grafico-brasil", headerTitle: "Raio-X: O Paradoxo Industrial Brasileiro", headerIcon: "fas fa-chart-pie", render: () => <SlideContainer><BrazilianPatentsParadox /></SlideContainer> },
         {
           id: "contexto-goias-1",
           render: () => (
             <SlideContainer>
-              <div className="flex justify-between items-end mb-4 shrink-0">
-                <h2 className="text-2xl lg:text-4xl font-black text-gray-900 flex items-center gap-2"><span className="text-blue-600">2.</span> A Singularidade Goiana</h2>
-                <i className="fas fa-lightbulb text-4xl text-gray-300 hidden sm:block"></i>
+              <div className="flex justify-between items-end mb-6 shrink-0 border-b border-gray-200 pb-4">
+                <h2 className="text-3xl lg:text-5xl font-black text-gray-900 flex items-center gap-4 tracking-tight"><span className="bg-gradient-to-br from-blue-600 to-blue-800 text-white w-10 h-10 lg:w-14 lg:h-14 flex items-center justify-center rounded-xl shadow-lg text-xl lg:text-3xl border border-blue-500">2</span> A Singularidade de Goiás</h2>
+                <i className="fas fa-lightbulb text-5xl lg:text-6xl text-gray-200 hidden sm:block drop-shadow-sm"></i>
               </div>
-              <p className="text-sm lg:text-base text-gray-600 mb-6 max-w-4xl border-l-4 border-gray-200 pl-4 shrink-0">Emprestando a expertise científica do agronegócio, Goiás moldou um ambiente fértil para a biotecnologia humana (HealthTechs).</p>
-              <div className="flex flex-col md:flex-row gap-4 lg:gap-6 flex-1">
-                <InteractiveStatCard iconClass="fas fa-heartbeat" color="text-gray-900" bg="bg-white border-2 border-black" number="+29%" text="Novas Startups" insightDetail="A transição de Agro para Saúde cria o ecossistema bioeconômico ideal no estado." source="Mapeamento Startups GO" />
-                <InteractiveStatCard iconClass="fas fa-bullseye" color="text-white" bg="bg-blue-600 border-2 border-black" number="R$ 30M" text="Hub Goiás" insightDetail="Injeção de capital direto do governo para validação e escala comercial." source="Secti-GO" />
-                <div className="bg-emerald-50 border-2 border-emerald-600 rounded-2xl p-5 lg:p-6 flex flex-col justify-between flex-1 min-h-[200px]">
-                  <div>
-                    <div className="inline-block px-2 py-1 bg-emerald-600 text-white rounded text-[10px] font-bold uppercase mb-2">Validação Global</div>
-                    <h4 className="text-xl font-black mb-2 text-emerald-900">Case Fitoprot</h4>
-                    <p className="text-emerald-800 text-xs lg:text-sm leading-relaxed mb-3">Patentes da UFG validaram viabilidade comercial vencendo prêmios massivos.</p>
-                    <SourceBadge source="Parque Tecnológico Samambaia" />
+              <p className="text-base lg:text-lg text-gray-600 mb-8 max-w-4xl border-l-4 border-gray-300 pl-5 shrink-0 font-medium leading-relaxed bg-gray-50 p-4 rounded-r-xl">
+                Reconhecido historicamente pelo imenso motor do Agronegócio, Goiás pegou sua expertise de extensão rural em tecnologia e a aplicou na biotecnologia humana, criando do zero o polo mais elástico de <strong>HealthTechs do Brasil Central</strong>.
+              </p>
+              <div className="flex flex-col md:flex-row gap-5 lg:gap-8 flex-1">
+                <InteractiveStatCard iconClass="fas fa-rocket" color="text-gray-900" bg="bg-white border-2 border-black" number="+29%" text="Crescimento Anual de Startups" insightDetail="O número de CNPJs focados em deep tech subiu assustadoramente no biênio (de 212 para 273), com empresas de software de saúde liderando a esteira ao aplicar bioeconomia local." source="Mapeamento Startups GO (Sebrae)" />
+                <InteractiveStatCard iconClass="fas fa-wallet" color="text-white" bg="bg-blue-600 border-2 border-black" number="R$ 30M" text="Captação HUB Goiás" insightDetail="Um Fundo de inovação governamental hiperagressivo foi desenhado fisicamente e financeiramente (Hub Goiás) para incubar cérebros universitários, evitando sua imigração para o eixo RJ-SP." source="Secti-GO Inovação" />
+                
+                <div className="bg-emerald-50 border-2 border-emerald-600 rounded-3xl p-6 lg:p-8 flex flex-col justify-between flex-1 min-h-[220px] shadow-lg relative overflow-hidden group">
+                  <div className="relative z-10">
+                    <div className="inline-block px-3 py-1 bg-emerald-600 text-white rounded font-black uppercase text-[10px] tracking-widest mb-4 shadow-md"><i className="fas fa-check-circle mr-1"></i> Case Prático Privado</div>
+                    <h4 className="text-2xl lg:text-3xl font-black mb-3 text-emerald-900 leading-tight">O Sucesso Fitoprot</h4>
+                    <p className="text-emerald-800 text-xs lg:text-sm leading-relaxed mb-4 font-medium">Patentes farmacêuticas complexas e medicamentos fitoterápicos desenhados nas bancadas sujas da Universidade (UFG) comprovaram robusta viabilidade e tracionaram a atenção do mercado vencendo o cobiçado Santander X Awards Brasil.</p>
                   </div>
+                  <div className="mt-auto relative z-10 pt-4 border-t border-emerald-200/50"><SourceBadge source="Parque Tecnológico Samambaia" /></div>
+                  <i className="fas fa-leaf absolute -bottom-5 -right-5 text-emerald-600 opacity-[0.08] text-[150px] group-hover:scale-110 transition-transform duration-500"></i>
                 </div>
               </div>
             </SlideContainer>
           )
         },
-        { id: "grafico-goias-timeline", headerTitle: "O Salto de Goiás", headerIcon: "fas fa-chart-line", render: () => <SlideContainer><GoiasTrend /></SlideContainer> },
+        { id: "grafico-goias-timeline", headerTitle: "O Boom e a Evolução Macroestrutural", headerIcon: "fas fa-chart-line", render: () => <SlideContainer><GoiasTrend /></SlideContainer> },
         {
           id: "contexto-goias-2",
           render: () => (
             <SlideContainer>
-              <div className="flex justify-between items-end mb-4 shrink-0">
-                 <h2 className="text-2xl lg:text-4xl font-black text-gray-900 flex items-center gap-2"><span className="text-blue-600">3.</span> A Máquina Física e Digital</h2>
-                 <i className="fas fa-server text-4xl text-gray-300 hidden sm:block"></i>
+              <div className="flex justify-between items-end mb-6 shrink-0 border-b border-gray-200 pb-4">
+                 <h2 className="text-3xl lg:text-5xl font-black text-gray-900 flex items-center gap-4 tracking-tight"><span className="bg-gradient-to-br from-blue-600 to-blue-800 text-white w-10 h-10 lg:w-14 lg:h-14 flex items-center justify-center rounded-xl shadow-lg text-xl lg:text-3xl border border-blue-500">3</span> A Máquina Física e Digital</h2>
+                 <i className="fas fa-server text-5xl lg:text-6xl text-gray-200 hidden sm:block drop-shadow-sm"></i>
               </div>
-              <p className="text-sm lg:text-base text-gray-600 mb-6 border-l-4 border-gray-200 pl-4 shrink-0">Goiás planejou a integração das duas matrizes operacionais (Soft/Hard) para inovações vitais.</p>
+              <p className="text-base lg:text-lg text-gray-600 mb-8 border-l-4 border-gray-300 pl-5 shrink-0 font-medium leading-relaxed bg-gray-50 p-4 rounded-r-xl">
+                A inovação médica hipercomplexa (como medicina robótica e telemedicina quântica) jamais escala sem aeroportos integrados e super-rodovias de fibra óptica (Wi-Fi 6). O grande acerto do Governo de Goiás foi planejar o Hardware e o Software juntos.
+              </p>
 
-              <div className="flex flex-col md:flex-row gap-6 lg:gap-8 flex-1">
-                <div className="flex-1 flex flex-col gap-3 lg:gap-4">
-                  <div className="text-gray-800 font-bold uppercase text-[10px] lg:text-xs bg-gray-100 px-3 py-1 w-max rounded-md flex items-center gap-1.5"><i className="fas fa-heartbeat"></i> Digital & Clínico</div>
-                  <div className="p-4 lg:p-5 bg-gray-900 text-white rounded-2xl shadow-md border-l-4 border-blue-500">
-                    <h4 className="font-bold text-base lg:text-lg mb-1 text-blue-400">FHIR®️ no SUS</h4>
-                    <p className="text-gray-300 text-xs lg:text-sm mb-2">O histórico viaja de maneira segura até a triagem algorítmica.</p>
+              <div className="flex flex-col md:flex-row gap-6 lg:gap-10 flex-1">
+                <div className="flex-1 flex flex-col gap-4 lg:gap-6">
+                  <div className="text-gray-700 font-black uppercase text-[10px] lg:text-xs bg-gray-100 px-5 py-2.5 w-max rounded-xl flex items-center gap-2 border border-gray-300 shadow-sm tracking-widest"><i className="fas fa-network-wired text-blue-600 text-sm"></i> Malha Neural e de Dados (Digital)</div>
+                  
+                  <div className="p-6 lg:p-8 bg-gray-900 text-white rounded-3xl shadow-2xl border-l-4 border-blue-500 relative overflow-hidden group">
+                    <h4 className="font-black text-xl lg:text-2xl mb-3 text-blue-400 relative z-10 tracking-tight">Software: Padrão FHIR®️ no SUS</h4>
+                    <p className="text-gray-300 text-sm lg:text-base mb-4 relative z-10 font-medium leading-relaxed">Prontuários e laudos do interior ao centro de Goiânia agora são lidos na mesma codificação computacional ("língua"). O interior transfere o paciente sabendo que IAs preditivas na capital já leram sua biometria inteira na nuvem.</p>
+                    <SourceBadge source="Governo Digital Abep-Tic / Saúde Goiás" dark={true} />
+                    <i className="fas fa-database absolute -bottom-5 -right-5 text-[100px] text-gray-700 opacity-20 group-hover:rotate-6 group-hover:scale-110 transition-transform duration-500"></i>
                   </div>
-                  <div className="p-4 lg:p-5 bg-white border border-gray-200 rounded-2xl shadow-sm flex-1">
-                    <h4 className="font-bold text-base lg:text-lg mb-1 text-gray-900">Hospital das Clínicas</h4>
-                    <p className="text-gray-600 text-xs lg:text-sm">"Laboratório vivo" para testar inovações do Ceti-Saúde.</p>
+                  
+                  <div className="p-6 lg:p-8 bg-white border border-gray-200 rounded-3xl shadow-lg flex-1 group relative overflow-hidden flex flex-col">
+                    <h4 className="font-black text-xl lg:text-2xl mb-3 text-gray-900 relative z-10 tracking-tight">O "Sandbox" Clínico (HC-UFG)</h4>
+                    <p className="text-gray-600 text-sm lg:text-base font-medium leading-relaxed relative z-10 flex-1">A reconstrução colossal deste complexo público de 20 andares não o tornou apenas um hospital, mas a "Bancada de Testes Vivos" das inovações dos pesquisadores da UFG.</p>
+                    <div className="mt-4 relative z-10 pt-4 border-t border-gray-100"><SourceBadge source="MEC / Ministério da Saúde / Ebserh" /></div>
                   </div>
                 </div>
 
-                <div className="flex-1 bg-blue-50 rounded-3xl p-5 lg:p-8 border border-blue-100 flex flex-col relative overflow-hidden">
-                   <div className="text-blue-900 font-bold uppercase text-[10px] lg:text-xs bg-white/50 px-3 py-1 w-max rounded-md flex items-center gap-1.5 mb-4 relative z-10"><i className="fas fa-plane-departure"></i> Infra / Smart Cities</div>
-                  <div className="mb-4 relative z-10 bg-white/70 p-3 rounded-xl">
-                    <h4 className="font-black text-sm lg:text-lg text-gray-900 mb-1">Antares Polo Aeronáutico</h4>
-                    <p className="text-gray-700 text-[10px] lg:text-xs">Ponte para genômica e UTI aérea.</p>
+                <div className="flex-1 bg-gradient-to-br from-blue-50 to-white rounded-3xl p-6 lg:p-10 border border-blue-200 flex flex-col relative overflow-hidden shadow-2xl">
+                   <div className="text-blue-900 font-black uppercase text-[10px] lg:text-xs bg-white px-5 py-2.5 w-max rounded-xl flex items-center gap-2 mb-6 lg:mb-8 relative z-10 shadow-sm border border-blue-100 tracking-widest"><i className="fas fa-truck-fast text-blue-600 text-sm"></i> Artérias Logísticas (Físico)</div>
+                  
+                  <div className="mb-5 relative z-10 bg-white/90 p-5 lg:p-6 rounded-2xl border border-white shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <h4 className="font-black text-lg lg:text-xl text-gray-900 mb-2 flex items-center gap-2.5"><div className="bg-blue-100 p-2 rounded-lg"><i className="fas fa-plane-departure text-blue-600"></i></div> Antares Polo Aeronáutico</h4>
+                    <p className="text-gray-700 text-xs lg:text-sm leading-relaxed font-medium ml-11">Investimento brutal desenhado milimetricamente para aviação executiva expressa e transporte noturno sensível. Escoamento de genômica avançada e UTIs aéreas rápidas no coração de Aparecida de Goiânia.</p>
                   </div>
-                  <div className="relative z-10 bg-white/70 p-3 rounded-xl">
-                    <h4 className="font-black text-sm lg:text-lg text-gray-900 mb-1">Inova Aparecida</h4>
-                    <p className="text-gray-700 text-[10px] lg:text-xs">Complexo para hospedar farmacêuticas.</p>
+                  
+                  <div className="relative z-10 bg-white/90 p-5 lg:p-6 rounded-2xl border border-white shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <h4 className="font-black text-lg lg:text-xl text-gray-900 mb-2 flex items-center gap-2.5"><div className="bg-blue-100 p-2 rounded-lg"><i className="fas fa-industry text-blue-600"></i></div> Inova Aparecida (Smart Park)</h4>
+                    <p className="text-gray-700 text-xs lg:text-sm leading-relaxed font-medium ml-11">Um megacomplexo de infraestrutura bruta (345 mil m²) construído propositalmente para dar incentivos fiscais violentos e atrair gigantes polos de montagem farmacêutica que antes ficavam imóveis no sudeste.</p>
                   </div>
-                  <i className="fas fa-building text-blue-200 opacity-30 absolute -bottom-10 -right-10 text-[200px]"></i>
+                  
+                  <i className="fas fa-city absolute -bottom-16 -right-16 text-blue-600 opacity-[0.04] text-[350px] z-0 pointer-events-none"></i>
                 </div>
               </div>
             </SlideContainer>
@@ -651,53 +640,56 @@
       }, []);
 
       return (
-        <div className="relative w-full max-w-7xl h-[90vh] min-h-[600px] bg-white shadow-2xl rounded-2xl sm:rounded-3xl flex flex-col overflow-hidden border border-gray-300">
+        <div className="relative w-full max-w-[1500px] h-[95vh] min-h-[650px] bg-white shadow-2xl rounded-2xl sm:rounded-3xl flex flex-col overflow-hidden border border-gray-300">
           
-          <div className={`px-4 lg:px-8 py-3 lg:py-4 border-b border-gray-100 flex justify-between items-center bg-white z-20 shadow-sm shrink-0 transition-all duration-300 ${slides[currentSlide].headerTitle ? 'h-auto opacity-100' : 'h-0 opacity-0 overflow-hidden py-0 border-transparent'}`}>
+          {/* HEADER FIXO SUPERIOR */}
+          <div className={`px-5 lg:px-10 py-4 lg:py-6 border-b border-gray-100 flex justify-between items-center bg-white z-20 shadow-sm shrink-0 transition-all duration-300 ${slides[currentSlide].headerTitle ? 'h-auto opacity-100' : 'h-0 opacity-0 overflow-hidden py-0 border-transparent'}`}>
              {slides[currentSlide].headerTitle && (
                <>
-                 <div className="flex items-center gap-2 lg:gap-4">
-                    <div className="p-1.5 lg:p-2 bg-blue-50 border border-blue-100 rounded-lg shadow-inner flex items-center justify-center">
-                      <i className={`${slides[currentSlide].headerIcon} text-blue-600 text-lg`}></i>
+                 <div className="flex items-center gap-4 lg:gap-5">
+                    <div className="p-2.5 lg:p-3 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl shadow-inner flex items-center justify-center">
+                      <i className={`${slides[currentSlide].headerIcon} text-blue-700 text-xl lg:text-3xl`}></i>
                     </div>
-                    <h2 className="text-sm sm:text-base lg:text-xl font-black text-gray-900 tracking-tight uppercase truncate">{slides[currentSlide].headerTitle}</h2>
+                    <h2 className="text-xl sm:text-2xl lg:text-4xl font-black text-gray-900 tracking-tighter uppercase truncate leading-none mt-1">{slides[currentSlide].headerTitle}</h2>
                  </div>
-                 <div className="text-[9px] lg:text-[10px] font-bold text-gray-500 bg-gray-100 px-2 lg:px-3 py-1 lg:py-1.5 rounded-full uppercase tracking-wider hidden sm:flex items-center gap-1.5 shrink-0">
-                    <i className="fas fa-heartbeat"></i> Painel {currentSlide + 1}/{slides.length}
+                 <div className="text-[10px] lg:text-xs font-black text-gray-400 bg-gray-50 px-4 py-2 rounded-full uppercase tracking-widest hidden sm:flex items-center gap-2 shrink-0 border border-gray-200 shadow-inner">
+                    <i className="fas fa-folder-open text-gray-400"></i> Painel de Análise {currentSlide + 1} de {slides.length}
                  </div>
                </>
              )}
           </div>
 
+          {/* ÁREA DE SLIDER CENTRAL */}
           <div className="flex-1 relative bg-white overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-full flex transition-transform duration-[600ms] ease-[cubic-bezier(0.645,0.045,0.355,1)]" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+            <div className="absolute top-0 left-0 w-full h-full flex transition-transform duration-[800ms] ease-[cubic-bezier(0.87,0,0.13,1)]" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
               {slides.map((slide) => (
-                <div key={slide.id} className="min-w-full h-full">
+                <div key={slide.id} className="min-w-full h-full bg-white">
                   {slide.render()}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-gray-50 border-t border-gray-200 p-3 lg:p-4 flex justify-between items-center px-4 lg:px-8 z-20 shrink-0">
-            <div className="flex items-center gap-4 lg:gap-6">
-              <i className="fas fa-bolt text-amber-500 text-lg"></i>
-              <div className="flex gap-1.5 lg:gap-2">
+          {/* RODAPÉ E NAVEGAÇÃO */}
+          <div className="bg-gray-50 border-t border-gray-200 p-4 lg:p-6 flex justify-between items-center px-5 lg:px-10 z-20 shrink-0">
+            <div className="flex items-center gap-5 lg:gap-8">
+              <div className="bg-amber-100 p-2 rounded-lg border border-amber-200 shadow-inner hidden sm:block"><i className="fas fa-bolt text-amber-500 text-xl drop-shadow-sm"></i></div>
+              <div className="flex gap-2 lg:gap-2.5">
                 {slides.map((_, i) => (
                   <button 
-                    key={i} onClick={() => setCurrentSlide(i)} aria-label={`Slide ${i + 1}`}
-                    className={`h-1.5 lg:h-2 transition-all duration-300 rounded-full ${currentSlide === i ? 'w-6 lg:w-8 bg-black shadow-md' : 'w-1.5 lg:w-2 bg-gray-300 hover:bg-gray-500'}`}
+                    key={i} onClick={() => setCurrentSlide(i)} aria-label={`Ir para Painel ${i + 1}`}
+                    className={`h-2 lg:h-3 transition-all duration-500 rounded-full ${currentSlide === i ? 'w-10 lg:w-14 bg-blue-600 shadow-md' : 'w-2 lg:w-3 bg-gray-300 hover:bg-gray-400'}`}
                   ></button>
                 ))}
               </div>
             </div>
             
-            <div className="flex gap-2 lg:gap-3">
-              <button onClick={prevSlide} className="px-3 lg:px-5 py-1.5 lg:py-2 flex items-center gap-1 lg:gap-2 rounded-full font-bold text-xs lg:text-sm bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors shadow-sm">
-                <i className="fas fa-chevron-left"></i> <span className="hidden sm:inline">Voltar</span>
+            <div className="flex gap-3 lg:gap-4">
+              <button onClick={prevSlide} className="px-5 lg:px-8 py-2.5 lg:py-3 flex items-center gap-2 rounded-xl font-bold text-xs lg:text-sm bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm focus:ring-4 focus:ring-gray-100">
+                <i className="fas fa-arrow-left"></i> <span className="hidden sm:inline uppercase tracking-widest text-[10px] lg:text-xs">Anterior</span>
               </button>
-              <button onClick={nextSlide} className="px-3 lg:px-5 py-1.5 lg:py-2 flex items-center gap-1 lg:gap-2 rounded-full font-bold text-xs lg:text-sm bg-black text-white hover:bg-gray-800 transition-colors shadow-md">
-                <span className="hidden sm:inline">Avançar</span> <i className="fas fa-chevron-right"></i>
+              <button onClick={nextSlide} className="px-5 lg:px-8 py-2.5 lg:py-3 flex items-center gap-2 rounded-xl font-black text-xs lg:text-sm bg-black border-2 border-black text-white hover:bg-gray-800 transition-all shadow-xl hover:shadow-black/20 focus:ring-4 focus:ring-gray-300">
+                <span className="hidden sm:inline uppercase tracking-widest text-[10px] lg:text-xs">Avançar Estudo</span> <i className="fas fa-arrow-right"></i>
               </button>
             </div>
           </div>
