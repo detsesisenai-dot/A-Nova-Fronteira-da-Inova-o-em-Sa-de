@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   BrainCircuit, Globe2, TrendingUp, MapPin, Award, Activity, ChevronRight, ChevronLeft,
   Server, PlaneTakeoff, Lightbulb, Building2, BarChart3, Trophy, PieChart, Info,
-  Globe, Building, Target, Zap, MousePointerClick, BookOpen, Eye, Hash, Microscope,
-  Cpu, ShieldAlert, TestTube2, Flag, Brain, Leaf, Bone, Bot, Ear, Bug, ScanLine, ExternalLink, Syringe
+  Building, Target, Zap, MousePointerClick, BookOpen, Eye, Hash, Microscope,
+  Cpu, ShieldAlert, TestTube2, Brain, Leaf, Bone, Bot, Ear, Bug, ScanLine, ExternalLink, Syringe, Globe
 } from 'lucide-react';
 
 const fontStyle = { fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' };
@@ -74,22 +74,22 @@ const DisruptiveInnovations = () => {
       country: "Global",
       description: "Uma tecnologia de realidade aumentada projeta um mapa exato e brilhante das veias diretamente na pele do paciente em tempo real. Utilizando luz infravermelha próxima, o sistema detecta a hemoglobina e cria um contraste visual imediato, revolucionando exames e acessos intravenosos em pacientes com veias difíceis.",
       institution: "StartSe Radar / HealthTechs",
-      source: "Demonstração de Realidade Aumentada Médica",
+      source: "Realidade Aumentada Médica",
       image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80",
       imgCaption: "[Mapeamento vascular com fluorescência]"
     },
     {
       id: 2,
       title: "Implante Cerebral Wireless",
-      shortDesc: "Tratamento para depressão resistente",
+      shortDesc: "Tratamento para depressão",
       icon: Brain,
       category: "Neurotecnologia",
       country: "EUA",
       description: "Aprovado para testes clínicos pelo FDA, o dispositivo DOT é um implante sem fio e minimamente invasivo posicionado acima do cérebro (não perfura o tecido). Ele modula a atividade cerebral de forma precisa com estimulação elétrica programável para tratar depressão crônica, substituindo medicamentos convencionais.",
       institution: "FDA / Wired / Radar Martha Gabriel",
-      source: "Interesting Engineering / Testes Clínicos EUA",
+      source: "Interesting Engineering",
       image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80",
-      imgCaption: "[Implante cerebral sem fio para depressão]"
+      imgCaption: "[Implante cerebral sem fio]"
     },
     {
       id: 3,
@@ -99,7 +99,7 @@ const DisruptiveInnovations = () => {
       category: "Engenharia de Tecidos",
       country: "Global",
       description: "Cientistas conseguiram cultivar tecido cardíaco humano funcional usando folhas de espinafre. Ao descelularizar a planta, sobra uma estrutura de celulose que serve de 'andaime' biológico. A rede natural de veias da folha transporta fluidos, simulando o fluxo sanguíneo do coração para regeneração de órgãos.",
-      institution: "Instituto Politécnico de Worcester (WPI)",
+      institution: "Instituto Politécnico de Worcester",
       source: "Autoexplicando / Pesquisa Biomédica",
       image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=800&q=80",
       imgCaption: "[Tecido cardíaco em folha de espinafre]"
@@ -112,10 +112,10 @@ const DisruptiveInnovations = () => {
       category: "Medicina Regenerativa",
       country: "Alemanha",
       description: "Pesquisadores alemães desenvolveram hidrogéis biológicos bioativos injetáveis que imitam a estrutura da cartilagem natural do joelho. O gel estimula a adesão celular e a produção de matriz extracelular, permitindo que o próprio corpo regenere o tecido articular severamente lesionado, evitando cirurgias invasivas.",
-      institution: "Fraunhofer-Gesellschaft / Nature Materials",
+      institution: "Fraunhofer-Gesellschaft",
       source: "Revista Nature Materials",
       image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80",
-      imgCaption: "[Regeneração de cartilagem com hidrogel]"
+      imgCaption: "[Regeneração de cartilagem]"
     },
     {
       id: 5,
@@ -125,10 +125,10 @@ const DisruptiveInnovations = () => {
       category: "Micro-robótica",
       country: "Global",
       description: "Um micro-robô (um filamento macio e magnético de 1cm) carregado com a enzima urease foi criado para atuar diretamente sobre pedras de ácido úrico nos rins. Guiado magneticamente até o local exato, ele dissolve o cálculo rapidamente por dentro, eliminando dor aguda e riscos de procedimentos invasivos.",
-      institution: "Fatos Curiosos / Bioengenharia",
-      source: "Pesquisa em Microrobótica Magnética",
+      institution: "Bioengenharia Magnética",
+      source: "Pesquisa em Microrobótica",
       image: "https://images.unsplash.com/photo-1614064016629-9e735e0766a5?auto=format&fit=crop&w=800&q=80",
-      imgCaption: "[Micro-robô dissolvendo pedras nos rins]"
+      imgCaption: "[Micro-robô dissolvendo pedras]"
     },
     {
       id: 6,
@@ -151,10 +151,10 @@ const DisruptiveInnovations = () => {
       category: "Oncologia Translacional",
       country: "Brasil",
       description: "Uma universidade brasileira descobriu que a cera de ouvido acumula biomarcadores voláteis (VOCs) capazes de denunciar tumores em estágios iniciais no organismo. Este método revolucionário promete um rastreio de câncer incrivelmente barato, indolor e não-invasivo para ser implementado na atenção básica do SUS.",
-      institution: "Universidade Brasileira / Jornal Nacional",
-      source: "Jornal Nacional / Estudo Oncológico Brasileiro",
+      institution: "Universidade Brasileira",
+      source: "Jornal Nacional / Estudo Oncológico",
       image: "https://images.unsplash.com/photo-1579684453423-f84349ef60b0?auto=format&fit=crop&w=800&q=80",
-      imgCaption: "[Pesquisa oncológica com cera de ouvido]"
+      imgCaption: "[Exame clínico de diagnóstico]"
     },
     {
       id: 8,
@@ -164,10 +164,10 @@ const DisruptiveInnovations = () => {
       category: "Farmacologia da Biodiversidade",
       country: "Brasil",
       description: "Pesquisadores isolaram peptídeos do veneno de uma espécie de marimbondo brasileiro (Polybia paulista). Testes mostram que essas moléculas conseguem inibir fortemente a agregação de proteínas tóxicas no cérebro, abrindo uma nova e poderosa fronteira para o tratamento do Alzheimer e Parkinson.",
-      institution: "Santa Casa São Carlos / CIDI / MedNucleo",
-      source: "Pesquisa Biodiversidade / Neurologia",
+      institution: "Santa Casa São Carlos / CIDI",
+      source: "Pesquisa Biodiversidade",
       image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80",
-      imgCaption: "[Peptídeos de marimbondo contra Alzheimer]"
+      imgCaption: "[Pesquisa com peptídeos de marimbondo]"
     }
   ];
 
@@ -208,7 +208,7 @@ const DisruptiveInnovations = () => {
 
         <div className="w-full lg:w-8/12 bg-black rounded-3xl overflow-hidden flex flex-col shadow-2xl min-h-[400px] relative border border-gray-800">
           <div className="absolute inset-0 z-0">
-             <img src={innovations[activeInv].image} alt={innovations[activeInv].imgCaption} className="w-full h-1/2 lg:h-full object-cover opacity-30 lg:opacity-40 mask-image-b-gradient animate-fade-in" key={`img-${activeInv}`} />
+             <img src={innovations[activeInv].image} alt={innovations[activeInv].imgCaption} className="w-full h-1/2 lg:h-full object-cover opacity-30 lg:opacity-40 animate-fade-in" style={{ maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)' }} key={`img-${activeInv}`} />
              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
           </div>
 
@@ -248,9 +248,14 @@ const DisruptiveInnovations = () => {
                   <div className="mt-2"><SourceBadge source={innovations[activeInv].source} dark={true} /></div>
                 </div>
                 
-                <button className="flex items-center justify-center gap-2 bg-white text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-amber-400 transition-colors shadow-lg hover:shadow-amber-500/20 group shrink-0">
-                  <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-black transition-colors" /> Ler na Íntegra
-                </button>
+                <a 
+                  href={`https://www.google.com/search?q=${encodeURIComponent(innovations[activeInv].title + ' ' + innovations[activeInv].institution)}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-white text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-amber-400 transition-colors shadow-lg hover:shadow-amber-500/20 group shrink-0 decoration-transparent"
+                >
+                  <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-black transition-colors" /> Ler na Íntegra
+                </a>
               </div>
               
               <span className="block text-[8px] text-gray-600 italic mt-4 text-right">
@@ -567,8 +572,6 @@ const GoiasTrend = () => {
 export default function CompletePresentation() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Usar funcões de renderização para garantir que objetos React 
-  // não sejam interpretados erroneamente no mapeamento e evitar montar os slides inativos prematuramente
   const slides = [
     {
       id: "capa",
@@ -621,8 +624,8 @@ export default function CompletePresentation() {
     },
     { id: "grafico-patentes", headerTitle: "Corrida Estratégica", headerIcon: BarChart3, render: () => <SlideContainer><InteractiveBarChart /></SlideContainer> },
     { id: "grafico-hospitais", headerTitle: "Vanguarda Hospitalar", headerIcon: Trophy, render: () => <SlideContainer><RankingHospitals /></SlideContainer> },
-    { id: "grafico-disruptivas", headerTitle: "Fronteiras da Medicina: Inovações Disruptivas", headerIcon: Syringe, render: () => <SlideContainer bg="bg-gray-900"><DisruptiveInnovations /></SlideContainer> },
-    { id: "grafico-solucoes", headerTitle: "Soluções e Pesquisa Aplicada", headerIcon: TestTube2, render: () => <SlideContainer><GlobalSolutionsCenters /></SlideContainer> },
+    { id: "grafico-disruptivas", headerTitle: "Fronteiras da Medicina", headerIcon: Syringe, render: () => <SlideContainer bg="bg-gray-900"><DisruptiveInnovations /></SlideContainer> },
+    { id: "grafico-solucoes", headerTitle: "Centros de Pesquisa Aplicada", headerIcon: TestTube2, render: () => <SlideContainer><GlobalSolutionsCenters /></SlideContainer> },
     { id: "grafico-brasil", headerTitle: "Raio-X Brasil", headerIcon: PieChart, render: () => <SlideContainer><BrazilianPatentsParadox /></SlideContainer> },
     {
       id: "contexto-goias-1",
@@ -736,7 +739,6 @@ export default function CompletePresentation() {
           <div className="absolute top-0 left-0 w-full h-full flex transition-transform duration-[600ms] ease-[cubic-bezier(0.645,0.045,0.355,1)]" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
             {slides.map((slide) => (
               <div key={slide.id} className="min-w-full h-full">
-                {/* Executa a função render() do slide em vez de interpolação direta para prevenir erros do React */}
                 {slide.render()}
               </div>
             ))}
