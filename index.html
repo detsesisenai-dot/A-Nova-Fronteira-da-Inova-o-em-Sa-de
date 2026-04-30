@@ -1,0 +1,772 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  BrainCircuit, Globe2, TrendingUp, MapPin, Award, Activity, ChevronRight, ChevronLeft,
+  Server, PlaneTakeoff, Lightbulb, Building2, BarChart3, Trophy, PieChart, Info,
+  Globe, Building, Target, Zap, MousePointerClick, BookOpen, Eye, Hash, Microscope,
+  Cpu, ShieldAlert, TestTube2, Flag, Brain, Leaf, Bone, Bot, Ear, Bug, ScanLine, ExternalLink, Syringe
+} from 'lucide-react';
+
+const fontStyle = { fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' };
+
+// --- COMPONENTES DE BASE ---
+const SlideContainer = ({ children, bg = "bg-white" }) => (
+  <div className={`min-w-full h-full overflow-y-auto custom-scrollbar flex flex-col p-6 lg:p-10 box-border ${bg}`} style={fontStyle}>
+    <div className="flex flex-col min-h-full pb-4">
+      {children}
+    </div>
+  </div>
+);
+
+const InteractiveHint = ({ text }) => (
+  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold rounded-full uppercase tracking-wider mb-2">
+    <MousePointerClick className="w-4 h-4" />
+    {text}
+  </div>
+);
+
+const SourceBadge = ({ source, dark = false }) => (
+  <div className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded border mt-1 ${dark ? 'text-gray-400 bg-gray-900/50 border-gray-700' : 'text-gray-400 bg-white/10 border-gray-200/20'}`}>
+    <BookOpen className="w-3 h-3" /> Fonte: {source}
+  </div>
+);
+
+const InteractiveStatCard = ({ number, text, icon: Icon, color, bg, source, insightDetail }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <div 
+      className={`relative p-5 lg:p-6 rounded-2xl ${bg} border-l-4 border-black shadow-sm flex-1 min-h-[220px] overflow-hidden transition-all duration-500 cursor-default group flex flex-col`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className={`transition-all duration-500 ${isHovered ? 'opacity-0 translate-y-4 absolute' : 'opacity-100 translate-y-0 relative'} flex flex-col h-full justify-between flex-1`}>
+        <div>
+          {Icon && <Icon className={`w-6 h-6 lg:w-8 lg:h-8 mb-3 ${color}`} />}
+          <span className={`text-3xl lg:text-5xl font-black tracking-tighter ${color}`}>{number}</span>
+          <span className="text-gray-800 mt-1 lg:mt-2 font-bold leading-snug block text-sm lg:text-base">{text}</span>
+        </div>
+        <div className="flex items-center gap-2 mt-4 text-[10px] lg:text-xs font-bold text-gray-500 uppercase">
+          <Eye className="w-4 h-4" /> Passe o mouse
+        </div>
+      </div>
+
+      <div className={`absolute inset-0 p-5 lg:p-6 bg-gray-900 text-white transition-all duration-500 flex flex-col justify-between ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full z-[-1]'}`}>
+        <div className="overflow-y-auto custom-scrollbar pr-2">
+          <h4 className="text-xs lg:text-sm font-bold text-blue-400 uppercase tracking-widest mb-2">Insight Estratégico</h4>
+          <p className="text-xs lg:text-sm leading-relaxed text-gray-200">{insightDetail}</p>
+        </div>
+        <div className="mt-2 shrink-0"><SourceBadge source={source} /></div>
+      </div>
+    </div>
+  );
+};
+
+// --- FRONTEIRAS DA MEDICINA (Inovações Disruptivas) ---
+const DisruptiveInnovations = () => {
+  const [activeInv, setActiveInv] = useState(0);
+
+  const innovations = [
+    {
+      id: 1,
+      title: "Mapeamento Fluorescente de Veias",
+      shortDesc: "O fim da agulha na veia errada",
+      icon: ScanLine,
+      category: "Procedimento Guiado",
+      country: "Global",
+      description: "Uma tecnologia de realidade aumentada projeta um mapa exato e brilhante das veias diretamente na pele do paciente em tempo real. Utilizando luz infravermelha próxima, o sistema detecta a hemoglobina e cria um contraste visual imediato, revolucionando exames e acessos intravenosos em pacientes com veias difíceis.",
+      institution: "StartSe Radar / HealthTechs",
+      source: "Demonstração de Realidade Aumentada Médica",
+      image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80",
+      imgCaption: "[Mapeamento vascular com fluorescência]"
+    },
+    {
+      id: 2,
+      title: "Implante Cerebral Wireless",
+      shortDesc: "Tratamento para depressão resistente",
+      icon: Brain,
+      category: "Neurotecnologia",
+      country: "EUA",
+      description: "Aprovado para testes clínicos pelo FDA, o dispositivo DOT é um implante sem fio e minimamente invasivo posicionado acima do cérebro (não perfura o tecido). Ele modula a atividade cerebral de forma precisa com estimulação elétrica programável para tratar depressão crônica, substituindo medicamentos convencionais.",
+      institution: "FDA / Wired / Radar Martha Gabriel",
+      source: "Interesting Engineering / Testes Clínicos EUA",
+      image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80",
+      imgCaption: "[Implante cerebral sem fio para depressão]"
+    },
+    {
+      id: 3,
+      title: "Coração de Espinafre",
+      shortDesc: "Folhas vegetais viram tecido humano",
+      icon: Leaf,
+      category: "Engenharia de Tecidos",
+      country: "Global",
+      description: "Cientistas conseguiram cultivar tecido cardíaco humano funcional usando folhas de espinafre. Ao descelularizar a planta, sobra uma estrutura de celulose que serve de 'andaime' biológico. A rede natural de veias da folha transporta fluidos, simulando o fluxo sanguíneo do coração para regeneração de órgãos.",
+      institution: "Instituto Politécnico de Worcester (WPI)",
+      source: "Autoexplicando / Pesquisa Biomédica",
+      image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=800&q=80",
+      imgCaption: "[Tecido cardíaco em folha de espinafre]"
+    },
+    {
+      id: 4,
+      title: "Gel Regenerador de Cartilagem",
+      shortDesc: "Fim das próteses metálicas",
+      icon: Bone,
+      category: "Medicina Regenerativa",
+      country: "Alemanha",
+      description: "Pesquisadores alemães desenvolveram hidrogéis biológicos bioativos injetáveis que imitam a estrutura da cartilagem natural do joelho. O gel estimula a adesão celular e a produção de matriz extracelular, permitindo que o próprio corpo regenere o tecido articular severamente lesionado, evitando cirurgias invasivas.",
+      institution: "Fraunhofer-Gesellschaft / Nature Materials",
+      source: "Revista Nature Materials",
+      image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80",
+      imgCaption: "[Regeneração de cartilagem com hidrogel]"
+    },
+    {
+      id: 5,
+      title: "Micro-robô de Rins",
+      shortDesc: "Dissolve pedras sem cirurgia",
+      icon: Bot,
+      category: "Micro-robótica",
+      country: "Global",
+      description: "Um micro-robô (um filamento macio e magnético de 1cm) carregado com a enzima urease foi criado para atuar diretamente sobre pedras de ácido úrico nos rins. Guiado magneticamente até o local exato, ele dissolve o cálculo rapidamente por dentro, eliminando dor aguda e riscos de procedimentos invasivos.",
+      institution: "Fatos Curiosos / Bioengenharia",
+      source: "Pesquisa em Microrobótica Magnética",
+      image: "https://images.unsplash.com/photo-1614064016629-9e735e0766a5?auto=format&fit=crop&w=800&q=80",
+      imgCaption: "[Micro-robô dissolvendo pedras nos rins]"
+    },
+    {
+      id: 6,
+      title: "Nanobots Arteriais",
+      shortDesc: "Limpadores de placas de gordura",
+      icon: Activity,
+      category: "Nanotecnologia",
+      country: "Global",
+      description: "Bisturis microscópicos? Mini robôs intravasculares estão sendo desenvolvidos para navegar pela corrente sanguínea e raspar ou dissolver mecanicamente placas de gordura (aterosclerose) nas artérias. Uma alternativa futurista para evitar infartos fulminantes sem necessidade de implantação de stents ou cirurgias abertas.",
+      institution: "Laboratórios de Nanomedicina",
+      source: "Inovação Nanotech Aplicada",
+      image: "https://images.unsplash.com/photo-1583912265922-83ef0a221fbc?auto=format&fit=crop&w=800&q=80",
+      imgCaption: "[Nanobots limpando artérias]"
+    },
+    {
+      id: 7,
+      title: "Cera de Ouvido vs Câncer",
+      shortDesc: "Diagnóstico precoce super barato",
+      icon: Ear,
+      category: "Oncologia Translacional",
+      country: "Brasil",
+      description: "Uma universidade brasileira descobriu que a cera de ouvido acumula biomarcadores voláteis (VOCs) capazes de denunciar tumores em estágios iniciais no organismo. Este método revolucionário promete um rastreio de câncer incrivelmente barato, indolor e não-invasivo para ser implementado na atenção básica do SUS.",
+      institution: "Universidade Brasileira / Jornal Nacional",
+      source: "Jornal Nacional / Estudo Oncológico Brasileiro",
+      image: "https://images.unsplash.com/photo-1579684453423-f84349ef60b0?auto=format&fit=crop&w=800&q=80",
+      imgCaption: "[Pesquisa oncológica com cera de ouvido]"
+    },
+    {
+      id: 8,
+      title: "Veneno de Marimbondo vs Alzheimer",
+      shortDesc: "Inibidor de neurodegeneração",
+      icon: Bug,
+      category: "Farmacologia da Biodiversidade",
+      country: "Brasil",
+      description: "Pesquisadores isolaram peptídeos do veneno de uma espécie de marimbondo brasileiro (Polybia paulista). Testes mostram que essas moléculas conseguem inibir fortemente a agregação de proteínas tóxicas no cérebro, abrindo uma nova e poderosa fronteira para o tratamento do Alzheimer e Parkinson.",
+      institution: "Santa Casa São Carlos / CIDI / MedNucleo",
+      source: "Pesquisa Biodiversidade / Neurologia",
+      image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80",
+      imgCaption: "[Peptídeos de marimbondo contra Alzheimer]"
+    }
+  ];
+
+  return (
+    <div className="flex flex-col h-full flex-1">
+      <div className="mb-4 shrink-0">
+        <InteractiveHint text="Selecione um caso na lista para explorar os detalhes" />
+      </div>
+      
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 flex-1 overflow-hidden">
+        <div className="w-full lg:w-4/12 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto custom-scrollbar pb-2 lg:pr-2">
+          {innovations.map((inv, index) => {
+            const IconObj = inv.icon;
+            return (
+              <button 
+                key={inv.id} 
+                onClick={() => setActiveInv(index)}
+                className={`p-3 lg:p-4 rounded-xl border-2 transition-all flex items-center gap-3 text-left min-w-[240px] lg:min-w-full shrink-0 group ${activeInv === index ? 'border-amber-500 bg-gray-900 shadow-md lg:translate-x-1' : 'border-gray-200 bg-white hover:bg-gray-100'}`}
+              >
+                <div className={`p-2 rounded-lg shadow-sm border shrink-0 transition-colors ${activeInv === index ? 'bg-gray-800 border-gray-700 text-amber-400' : 'bg-gray-100 border-gray-200 text-gray-500 group-hover:bg-white'}`}>
+                  <IconObj className="w-5 h-5 lg:w-6 lg:h-6" />
+                </div>
+                <div className="truncate flex-1">
+                  <span className={`block text-[9px] lg:text-[10px] font-bold uppercase tracking-widest mb-0.5 ${activeInv === index ? 'text-amber-400' : 'text-blue-600'}`}>
+                    {inv.category}
+                  </span>
+                  <span className={`font-black text-xs lg:text-sm leading-tight truncate block ${activeInv === index ? 'text-white' : 'text-gray-900'}`}>
+                    {inv.title}
+                  </span>
+                  <span className={`text-[10px] mt-0.5 block truncate ${activeInv === index ? 'text-gray-400' : 'text-gray-500'}`}>
+                    {inv.shortDesc}
+                  </span>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="w-full lg:w-8/12 bg-black rounded-3xl overflow-hidden flex flex-col shadow-2xl min-h-[400px] relative border border-gray-800">
+          <div className="absolute inset-0 z-0">
+             <img src={innovations[activeInv].image} alt={innovations[activeInv].imgCaption} className="w-full h-1/2 lg:h-full object-cover opacity-30 lg:opacity-40 mask-image-b-gradient animate-fade-in" key={`img-${activeInv}`} />
+             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+          </div>
+
+          <div className="relative z-10 p-6 lg:p-10 flex flex-col h-full justify-end text-white overflow-y-auto custom-scrollbar animate-fade-in" key={`content-${activeInv}`}>
+            <div className="mb-auto hidden lg:flex justify-between items-start">
+              <span className="bg-amber-500 text-black font-black text-[10px] uppercase tracking-widest px-3 py-1 rounded-sm flex items-center gap-1.5 shadow-lg">
+                <Zap className="w-3 h-3" /> Inovação Disruptiva
+              </span>
+              <span className="flex items-center gap-1.5 text-xs font-bold text-gray-400 uppercase tracking-widest bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-700 backdrop-blur-sm">
+                <MapPin className="w-3 h-3 text-amber-500" /> {innovations[activeInv].country}
+              </span>
+            </div>
+
+            <div className="mt-12 lg:mt-0">
+              <div className="flex items-center gap-2 mb-2 lg:hidden">
+                 <span className="bg-amber-500 text-black font-black text-[9px] uppercase tracking-widest px-2 py-0.5 rounded-sm">Disruptivo</span>
+              </div>
+              <h2 className="text-3xl lg:text-5xl font-black mb-2 leading-tight text-white drop-shadow-md">
+                {innovations[activeInv].title}
+              </h2>
+              <h4 className="text-amber-400 text-sm lg:text-lg font-bold mb-6 tracking-wide drop-shadow-sm">
+                "{innovations[activeInv].shortDesc}"
+              </h4>
+              
+              <div className="bg-gray-900/60 backdrop-blur-md border border-gray-700/50 p-5 rounded-2xl mb-6 shadow-inner">
+                <p className="text-gray-200 text-sm lg:text-base leading-relaxed">
+                  {innovations[activeInv].description}
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <span className="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Instituição / Referência</span>
+                  <span className="flex items-center gap-2 font-bold text-sm text-gray-100">
+                    <Building className="w-4 h-4 text-blue-400" /> {innovations[activeInv].institution}
+                  </span>
+                  <div className="mt-2"><SourceBadge source={innovations[activeInv].source} dark={true} /></div>
+                </div>
+                
+                <button className="flex items-center justify-center gap-2 bg-white text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-amber-400 transition-colors shadow-lg hover:shadow-amber-500/20 group shrink-0">
+                  <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-black transition-colors" /> Ler na Íntegra
+                </button>
+              </div>
+              
+              <span className="block text-[8px] text-gray-600 italic mt-4 text-right">
+                {innovations[activeInv].imgCaption}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- GRÁFICOS INTERATIVOS E PAINÉIS EXISTENTES ---
+const InteractiveBarChart = () => {
+  const [activeInsight, setActiveInsight] = useState(0);
+  const data = [
+    { country: 'China', rank: '1º', value: 1800000, display: '1.8M', width: '100%', color: 'bg-red-600', axes: ['IA Preditiva', 'Robótica Cirúrgica'], insight: 'O Estado chinês injeta capital massivo para acelerar patentes de infraestrutura hospitalar e robótica, buscando independência ocidental.', strategic: 'Parcerias público-privadas ágeis convertem pesquisa acadêmica em protótipos industriais em tempo recorde.', source: 'OMPI/WIPO Report 2025', image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=80', imgCaption: '[Laboratório de Robótica Médica]' },
+    { country: 'EUA', rank: '2º', value: 503000, display: '503 Mil', width: '35%', color: 'bg-blue-600', axes: ['Deep Tech', 'Drug Discovery'], insight: 'Líderes isolados em impacto e monetização. As patentes americanas focam em biologia sintética e edição genética (CRISPR).', strategic: 'Dominância das "Big Pharmas" que adquirem healthtechs menores logo nas primeiras fases de ensaios clínicos.', source: 'USPTO / Fórum Econômico Mundial', image: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=500&q=80', imgCaption: '[Pesquisa Genética CRISPR]' },
+    { country: 'Japão', rank: '3º', value: 420000, display: '420 Mil', width: '28%', color: 'bg-gray-800', axes: ['Longevidade', 'Regenerativa'], insight: 'O ecossistema é direcionado a resolver sua crise demográfica. Foco brutal em terapias senolíticas e biossensores de monitoramento remoto.', strategic: 'A tecnologia é voltada para manutenção da qualidade de vida domiciliar, esvaziando leitos.', source: 'Japan Patent Office (JPO)', image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=500&q=80', imgCaption: '[Dispositivos Vestíveis de Saúde]' },
+    { country: 'Índia', rank: '6º', value: 150000, display: '150 Mil', width: '15%', color: 'bg-emerald-500', axes: ['P&D Farmacêutico', 'Genéricos'], insight: 'A Índia vive uma transição histórica (+19.2% cresc.). Conhecida como a "farmácia do mundo", agora investe pesadamente em P&D original.', strategic: 'Incentivos de fomento estatal para migrar da manufatura (copiar) para a patenteabilidade (criar).', source: 'WIPO India Patents Report', image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=500&q=80', imgCaption: '[Produção Farmacêutica]' },
+    { country: 'Brasil', rank: '24º', value: 31036, display: '31 Mil', width: '5%', color: 'bg-yellow-500', axes: ['Insumos', 'Diagnósticos'], insight: 'O Choque de Realidade: Nossa produção foca em insumos da biodiversidade e soluções diagnósticas, lideradas por instituições públicas.', strategic: 'Oportunidade para capital de risco (VC) investir na transição das patentes de prateleira para o mercado.', source: 'INPI - Indicadores de PI', image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=500&q=80', imgCaption: '[Pesquisador Acadêmico]' },
+  ];
+
+  return (
+    <div className="flex flex-col lg:flex-row h-full gap-6 flex-1">
+      <div className="w-full lg:w-5/12 flex flex-col gap-2 border-b lg:border-b-0 lg:border-r border-gray-200 pb-4 lg:pb-0 lg:pr-6 shrink-0">
+        <div className="mb-2"><InteractiveHint text="Passe o cursor sobre as barras" /></div>
+        <div className="flex-1 flex flex-col justify-around gap-4 lg:gap-2 overflow-y-auto custom-scrollbar">
+          {data.map((item, index) => (
+            <div key={item.country} className="group cursor-pointer" onMouseEnter={() => setActiveInsight(index)}>
+              <div className="flex justify-between items-end mb-1">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <div className={`flex items-center justify-center w-6 h-6 lg:w-7 lg:h-7 rounded text-[10px] font-black transition-all duration-300 border ${activeInsight === index ? 'bg-gray-900 text-white border-gray-900' : 'bg-gray-100 text-gray-500 border-gray-200 group-hover:bg-gray-200'}`}>{item.rank}</div>
+                    <span className="flex items-center gap-1 text-xs lg:text-sm font-bold uppercase tracking-wider text-gray-800">{item.country === 'Brasil' && <MapPin className="w-3 h-3 lg:w-4 lg:h-4 text-yellow-600" />} {item.country}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1 lg:ml-9">
+                    {item.axes.map((axis, i) => (<span key={i} className={`text-[9px] px-1.5 py-0.5 rounded font-bold tracking-wide transition-colors border ${activeInsight === index ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-500 border-gray-200'}`}>{axis}</span>))}
+                  </div>
+                </div>
+                <div className="text-right"><span className="text-xs lg:text-sm font-black text-gray-900 block leading-tight">{item.display}</span></div>
+              </div>
+              <div className="w-full bg-gray-100 h-3 lg:h-4 rounded-r-md overflow-hidden flex lg:ml-9" style={{ width: 'calc(100% - 36px)' }}>
+                <div className={`h-full ${item.color} transition-all duration-700 ease-out flex items-center px-4 ${activeInsight === index ? 'opacity-100' : 'opacity-30'}`} style={{ width: item.width }} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="w-full lg:w-7/12 bg-gray-900 rounded-3xl p-5 lg:p-6 text-white flex flex-col shadow-xl min-h-[350px]">
+        <div className="flex items-center justify-between mb-4 shrink-0">
+           <div className="flex items-center gap-3">
+             <Info className={`w-5 h-5 lg:w-6 lg:h-6 ${data[activeInsight].country === 'Brasil' ? 'text-yellow-400' : 'text-blue-400'}`} />
+             <h4 className={`font-black text-xl lg:text-2xl ${data[activeInsight].country === 'Brasil' ? 'text-yellow-400' : 'text-white'}`}>Análise: {data[activeInsight].country}</h4>
+           </div>
+           <div className="bg-white/10 px-3 py-1 rounded-full border border-white/20 flex items-center gap-1.5">
+             <Hash className="w-3 h-3 text-gray-400" /><span className="font-bold text-[10px] lg:text-xs tracking-widest uppercase text-gray-200">{data[activeInsight].rank}</span>
+           </div>
+        </div>
+        <div className="flex flex-col lg:flex-row gap-5 flex-1 overflow-y-auto custom-scrollbar">
+          <div className="flex flex-col gap-4 flex-1">
+            <p className="text-gray-300 text-xs lg:text-sm leading-relaxed">{data[activeInsight].insight}</p>
+            <div className="bg-white/10 p-3 lg:p-4 rounded-xl border border-white/20 mt-auto">
+              <div className="text-[10px] lg:text-xs text-blue-300 font-bold uppercase tracking-widest mb-1.5 flex items-center gap-2"><Target className="w-3 h-3"/> Ação Estratégica</div>
+              <p className="text-xs lg:text-sm text-gray-200">{data[activeInsight].strategic}</p>
+            </div>
+          </div>
+          <div className="flex flex-col w-full lg:w-5/12 shrink-0">
+            <div className="w-full h-32 lg:h-40 bg-black rounded-xl overflow-hidden mb-2 border border-gray-700">
+              <img src={data[activeInsight].image} alt={data[activeInsight].imgCaption} className="w-full h-full object-cover opacity-80" />
+            </div>
+            <span className="text-[9px] text-gray-500 italic mb-2 leading-tight">{data[activeInsight].imgCaption}</span>
+            <div className="mt-auto"><SourceBadge source={data[activeInsight].source} /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const RankingHospitals = () => {
+  const [selectedRank, setSelectedRank] = useState(1);
+  const hospitals = [
+    { rank: 1, name: 'Mayo Clinic', location: 'EUA', type: 'Global', icon: Globe, insight: 'Padrão-ouro em medicina conectada. Integraram IA em todos os processos, da triagem ao diagnóstico genético, reduzindo erros médicos em 22% e otimizando leitos.', note: 'IA preditiva reduzindo tempo de diagnóstico.', source: 'Newsweek World\'s Best Hospitals', image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=500&q=80', imgCaption: '[Médico usando Tablet]' },
+    { rank: 2, name: 'Cleveland Clinic', location: 'EUA', type: 'Global', icon: Globe, insight: 'Instalaram o primeiro Computador Quântico dedicado à saúde (IBM). O objetivo é simular dobras de proteínas para curar câncer e Alzheimer em dias, não anos.', note: 'Aliança Quântica de Saúde global.', source: 'IBM Quantum Healthcare', image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=500&q=80', imgCaption: '[Computador Quântico]' },
+    { rank: 16, name: 'Albert Einstein', location: 'Brasil', type: 'Latam', icon: Building, insight: 'Líder isolado na América Latina. Cria tecnologia através do Hub Eretz.bio, que acelerou mais de 120 startups conectando-as à realidade clínica.', note: 'Eretz.bio capta deep techs.', source: 'Ranking Newsweek Latam', image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=500&q=80', imgCaption: '[Incubadora de Inovação]' },
+    { rank: 189, name: 'HC-FMUSP', location: 'Brasil', type: 'Público', icon: Target, insight: 'Único hospital público brasileiro na elite. O núcleo InovaHC atua como "Sandbox" unindo a imensa base de dados do SUS com corporações privadas.', note: 'Open Innovation Lab e SUS.', source: 'InovaHC 2024', image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=500&q=80', imgCaption: '[Complexo de Pesquisa]' },
+  ];
+  return (
+    <div className="flex flex-col h-full flex-1">
+       <div className="mb-4 shrink-0"><InteractiveHint text="Selecione as instituições para ver a análise" /></div>
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 flex-1 overflow-hidden">
+        <div className="w-full lg:w-5/12 flex flex-col gap-3 overflow-y-auto custom-scrollbar pb-2 pr-2">
+          {hospitals.map((hosp) => (
+            <div key={hosp.rank} onClick={() => setSelectedRank(hosp.rank)} className={`p-3 lg:p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 lg:gap-4 shrink-0 ${selectedRank === hosp.rank ? 'border-black bg-black text-white shadow-md lg:translate-x-2' : 'border-gray-200 bg-white hover:border-gray-400'}`}>
+              <div className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full flex flex-col items-center justify-center shrink-0 ${selectedRank === hosp.rank ? 'bg-white text-black' : 'bg-gray-100'}`}>
+                <span className="text-[9px] lg:text-[10px] uppercase font-bold leading-none mt-1">Nº</span><span className="font-black text-base lg:text-lg leading-none">{hosp.rank}</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-sm lg:text-lg leading-tight">{hosp.name}</h3><p className={`text-[10px] lg:text-xs uppercase tracking-wide mt-1 ${selectedRank === hosp.rank ? 'text-gray-400' : 'text-gray-500'}`}>{hosp.location} • {hosp.type}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="w-full lg:w-7/12 bg-gray-50 border border-gray-200 p-5 lg:p-8 rounded-3xl flex flex-col relative overflow-hidden min-h-[350px]">
+          {hospitals.filter(h => h.rank === selectedRank).map(active => {
+            const IconObj = active.icon;
+            return (
+              <div key={active.rank} className="relative z-10 flex flex-col h-full overflow-y-auto custom-scrollbar pr-2">
+                <div className="flex justify-between items-start mb-4 lg:mb-6 shrink-0">
+                  <div>
+                    <div className="text-[10px] lg:text-xs font-bold text-blue-600 uppercase tracking-widest mb-1.5 flex items-center gap-2"><IconObj className="w-3 h-3 lg:w-4 lg:h-4" /> Liderança</div>
+                    <h2 className="text-2xl lg:text-3xl font-black text-gray-900">{active.name}</h2>
+                  </div>
+                  <div className="w-24 h-16 lg:w-32 lg:h-20 rounded-lg overflow-hidden border border-gray-300 shadow-sm shrink-0 hidden sm:block">
+                     <img src={active.image} alt={active.imgCaption} className="w-full h-full object-cover" />
+                  </div>
+                </div>
+                <div className="flex-grow">
+                  <p className="text-gray-700 leading-relaxed font-light mb-4 text-xs lg:text-sm border-l-2 border-black pl-3">{active.insight}</p>
+                  <div className="bg-white p-3 lg:p-4 rounded-xl border border-gray-200 mb-4 shadow-sm">
+                    <h4 className="text-[10px] lg:text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 border-b border-gray-100 pb-1.5">Destaque Estratégico</h4>
+                    <div className="flex items-center gap-2 text-xs lg:text-sm text-gray-900 font-bold"><Lightbulb className="w-4 h-4 text-amber-500 shrink-0" />{active.note}</div>
+                  </div>
+                </div>
+                <div className="shrink-0 mt-auto">
+                  <span className="text-[9px] text-gray-400 italic block mb-1">{active.imgCaption}</span>
+                  <SourceBadge source={active.source} />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const BrazilianPatentsParadox = () => {
+  const [hoverArea, setHoverArea] = useState('foreign');
+  const data = {
+    foreign: { title: "O Domínio Estrangeiro", statsNumber: "21.073", statsLabel: "Depósitos Estrangeiros", text: "Dois terços da tecnologia de ponta protegida no Brasil pertencem a corporações globais. Isso encarece os custos do SUS devido aos altos royalties.", origins: [{ c: "EUA", flag: "🇺🇸" }, { c: "Alemanha", flag: "🇩🇪" }, { c: "Suíça", flag: "🇨🇭" }, { c: "China", flag: "🇨🇳" }], action: "A estratégia deve migrar para atração de matrizes industriais através de Parcerias Público-Privadas (PPPs).", source: "INPI 2025", image: "https://images.unsplash.com/photo-1587370560942-ad2a04eabb6d?auto=format&fit=crop&w=500&q=80", imgCaption: "[Insumos Importados]" },
+    domestic: { title: "A Ciência Solitária", statsNumber: "9.963", statsLabel: "Depósitos Nacionais", text: "A ciência brasileira brota quase exclusivamente das Universidades Públicas. O grande obstáculo é o 'Vale da Morte': levar a pesquisa acadêmica para a indústria.", origins: [{ c: "USP (SP)", flag: "📍" }, { c: "UFCG (PB)", flag: "📍" }, { c: "UFMG (MG)", flag: "📍" }, { c: "UFG (GO)", flag: "📍" }], action: "A integração de laboratórios acadêmicos com Venture Capital é essencial para escalar financeiramente a pesquisa.", source: "Observatório de Inovação", image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=500&q=80", imgCaption: "[Pesquisa Universitária]" }
+  };
+  const activeData = hoverArea === 'foreign' ? data.foreign : data.domestic;
+
+  return (
+    <div className="h-full flex flex-col flex-1">
+      <div className="mb-4 shrink-0"><InteractiveHint text="Deslize sobre os blocos e compare" /></div>
+      <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 mb-4 lg:mb-6 shrink-0">
+        <button onMouseEnter={() => setHoverArea('foreign')} className={`flex-1 p-3 lg:p-4 rounded-xl border-l-4 transition-all text-left flex items-center justify-between ${hoverArea === 'foreign' ? 'border-red-600 bg-red-50 shadow-md' : 'border-gray-200 bg-white'}`}>
+          <div>
+            <div className="flex items-baseline gap-2"><div className="text-2xl lg:text-3xl font-black text-red-600 mb-0.5">67.9%</div></div>
+            <div className="font-bold text-gray-900 uppercase tracking-wide text-[10px] lg:text-xs">Patentes Estrangeiras</div>
+          </div>
+          <Globe2 className={`w-8 h-8 lg:w-10 lg:h-10 ${hoverArea === 'foreign' ? 'text-red-400' : 'text-gray-300'}`} />
+        </button>
+        <button onMouseEnter={() => setHoverArea('domestic')} className={`flex-1 p-3 lg:p-4 rounded-xl border-l-4 transition-all text-left flex items-center justify-between ${hoverArea === 'domestic' ? 'border-blue-600 bg-blue-50 shadow-md' : 'border-gray-200 bg-white'}`}>
+          <div>
+            <div className="flex items-baseline gap-2"><div className="text-2xl lg:text-3xl font-black text-blue-600 mb-0.5">32.1%</div></div>
+            <div className="font-bold text-gray-900 uppercase tracking-wide text-[10px] lg:text-xs">Patentes Nacionais</div>
+          </div>
+          <Building className={`w-8 h-8 lg:w-10 lg:h-10 ${hoverArea === 'domestic' ? 'text-blue-400' : 'text-gray-300'}`} />
+        </button>
+      </div>
+      <div className="flex-1 bg-gray-900 rounded-3xl p-5 lg:p-8 text-white flex flex-col lg:flex-row gap-6 overflow-hidden shadow-xl min-h-[350px]">
+        <div className="flex-1 flex flex-col justify-between overflow-y-auto custom-scrollbar pr-2 z-10">
+          <div key={activeData.title} className="animate-fade-in">
+            <h3 className={`text-xl lg:text-2xl font-black mb-3 ${hoverArea === 'foreign' ? 'text-red-400' : 'text-blue-400'}`}>{activeData.title}</h3>
+            <div className="flex flex-col gap-2 mb-4 bg-white/5 p-3 rounded-lg border border-white/10">
+              <div className="flex items-center gap-3">
+                 <span className={`text-2xl font-black ${hoverArea === 'foreign' ? 'text-red-300' : 'text-blue-300'}`}>{activeData.statsNumber}</span>
+                 <span className="text-[10px] lg:text-xs text-gray-300 font-bold uppercase tracking-wider">{activeData.statsLabel}</span>
+              </div>
+              <p className="text-gray-300 leading-relaxed text-xs lg:text-sm mt-1">{activeData.text}</p>
+            </div>
+            <div className="mb-4">
+              <span className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Principais Emissores</span>
+              <div className="flex flex-wrap gap-2">
+                {activeData.origins.map((orig, i) => (<span key={i} className="bg-gray-800 border border-gray-700 text-gray-200 text-[10px] lg:text-xs px-2 py-1 rounded-md flex items-center gap-1.5 font-medium">{orig.flag} {orig.c}</span>))}
+              </div>
+            </div>
+            <div className={`p-3 rounded-xl border-l-2 bg-white/5 ${hoverArea === 'foreign' ? 'border-red-500' : 'border-blue-500'}`}>
+              <span className="block text-[10px] font-bold uppercase tracking-widest mb-1.5 text-gray-400"><Target className="w-3 h-3 inline mr-1"/> Diagnóstico</span>
+              <p className="text-xs lg:text-sm text-white font-medium">{activeData.action}</p>
+            </div>
+          </div>
+          <div className="mt-3 shrink-0"><SourceBadge source={activeData.source} /></div>
+        </div>
+        <div className="w-full lg:w-1/3 hidden sm:flex flex-col z-10 h-32 lg:h-auto shrink-0">
+           <div className="flex-1 rounded-xl overflow-hidden border border-gray-700 bg-black">
+              <img src={activeData.image} alt={activeData.imgCaption} className="w-full h-full object-cover opacity-70" />
+           </div>
+           <span className="text-[9px] text-gray-500 italic mt-1 text-center">{activeData.imgCaption}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const GlobalSolutionsCenters = () => {
+  const [activeCenter, setActiveCenter] = useState(0);
+  const centers = [
+    { country: 'Alemanha', flag: '🇩🇪', institution: 'Fraunhofer-Gesellschaft', icon: Microscope, title: 'Biomanufatura 3D', desc: 'A maior organização de pesquisa aplicada da Europa une a engenharia alemã à biologia. Desenvolvem a biomanufatura 3D de tecidos e próteses biônicas perfeitamente integradas ao sistema nervoso.', impact: 'Integração entre a indústria de precisão e a saúde regenerativa.', source: 'Fraunhofer Institute', image: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=500&q=80', imgCaption: '[Engenharia de tecidos 3D]' },
+    { country: 'China', flag: '🇨🇳', institution: 'Hospitais 5G', icon: Cpu, title: 'Hospitais Autônomos', desc: 'A China escala a inovação com redes 5G, criando hospitais onde a triagem primária e o monitoramento são feitos 100% por robôs e algoritmos, mitigando a falta de médicos em zonas rurais.', impact: 'Modelos de IA treinados na escala de bilhões para diagnóstico.', source: 'China Health Policy', image: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&w=500&q=80', imgCaption: '[Robô autônomo hospitalar]' },
+    { country: 'Índia', flag: '🇮🇳', institution: 'Inovadores Locais', icon: Zap, title: 'Diagnóstico Portátil', desc: 'Mestres na "Inovação Reversa", cientistas indianos redesenham equipamentos caros para versões portáteis de baixo custo (ex: ECG de U$ 10 integrados a smartphones).', impact: 'Democratização radical: tecnologias profundas acessíveis no Sul Global.', source: 'Centre for Cellular Platforms', image: 'https://images.unsplash.com/photo-1532187643603-c76088e5e6e6?auto=format&fit=crop&w=500&q=80', imgCaption: '[Dispositivo médico portátil]' },
+    { country: 'Brasil', flag: '🇧🇷', institution: 'Fiocruz', icon: ShieldAlert, title: 'Vigilância Genômica', desc: 'A Fiocruz lidera o desenvolvimento e a produção nacional de vacinas e soros, garantindo a soberania biológica do SUS através da imensa rede de vigilância laboratorial.', impact: 'Redução da dependência internacional de insumos biológicos.', source: 'Ministério da Saúde / Fiocruz', image: 'https://images.unsplash.com/photo-1584362917165-526a968579e8?auto=format&fit=crop&w=500&q=80', imgCaption: '[Laboratório de vacinas]' }
+  ];
+
+  return (
+    <div className="flex flex-col h-full flex-1">
+      <div className="mb-4 shrink-0">
+        <InteractiveHint text="Selecione um país" />
+      </div>
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 flex-1 overflow-hidden">
+        <div className="w-full lg:w-4/12 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto custom-scrollbar pb-2 lg:pr-2">
+          {centers.map((center, index) => (
+            <button 
+              key={index} onClick={() => setActiveCenter(index)}
+              className={`p-3 lg:p-4 rounded-xl border-2 transition-all flex items-center gap-3 text-left min-w-[200px] lg:min-w-full shrink-0 ${activeCenter === index ? 'border-blue-600 bg-blue-50 shadow-md lg:translate-x-1' : 'border-gray-200 bg-white hover:bg-gray-50'}`}
+            >
+              <div className="text-xl lg:text-2xl bg-white p-1.5 lg:p-2 rounded-lg shadow-sm border border-gray-100 shrink-0">{center.flag}</div>
+              <div className="truncate">
+                <span className={`block text-[9px] lg:text-xs font-bold uppercase tracking-widest mb-0.5 ${activeCenter === index ? 'text-blue-600' : 'text-gray-400'}`}>{center.country}</span>
+                <span className={`font-bold text-xs lg:text-sm leading-tight truncate ${activeCenter === index ? 'text-gray-900' : 'text-gray-700'}`}>{center.institution}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <div className="w-full lg:w-8/12 bg-gray-900 rounded-3xl overflow-hidden flex flex-col lg:flex-row shadow-xl min-h-[350px]">
+          <div className="flex-1 p-5 lg:p-8 flex flex-col justify-between text-white relative z-10 overflow-y-auto custom-scrollbar">
+            <div key={centers[activeCenter].title}>
+              <div className="flex items-center gap-2 mb-3 text-blue-400">
+                {React.createElement(centers[activeCenter].icon, { className: "w-4 h-4 lg:w-5 lg:h-5 shrink-0" })}
+                <span className="text-[10px] font-bold uppercase tracking-widest border border-blue-400/30 px-2 py-0.5 rounded-full bg-blue-400/10 shrink-0">Destaque</span>
+              </div>
+              <h3 className="text-xl lg:text-2xl font-black mb-3 leading-tight text-white">{centers[activeCenter].title}</h3>
+              <p className="text-gray-300 text-xs lg:text-sm leading-relaxed mb-4 border-l-2 border-gray-600 pl-3">
+                {centers[activeCenter].desc}
+              </p>
+              <div className="bg-white/10 p-3 rounded-xl border border-white/10 shadow-inner">
+                <span className="block text-[10px] text-amber-400 font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Target className="w-3 h-3" /> Impacto</span>
+                <p className="text-xs lg:text-sm text-gray-100 font-medium">{centers[activeCenter].impact}</p>
+              </div>
+            </div>
+            <div className="mt-4 shrink-0"><SourceBadge source={centers[activeCenter].source} /></div>
+          </div>
+          
+          <div className="w-full lg:w-2/5 h-48 lg:h-auto bg-black relative shrink-0">
+             <img src={centers[activeCenter].image} alt={centers[activeCenter].imgCaption} className="absolute inset-0 w-full h-full object-cover opacity-60" />
+             <div className="absolute bottom-2 left-0 right-0 px-2">
+                <span className="block text-[9px] text-center text-gray-300 bg-black/60 backdrop-blur-sm p-1 rounded italic">{centers[activeCenter].imgCaption}</span>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const GoiasTrend = () => {
+  const [activeStep, setActiveStep] = useState(2);
+  const timeline = [
+    { year: 'Fase 1', title: 'Dados SUS', metric: 'HL7 FHIR', desc: 'Pioneirismo FHIR: prontuários unificados para IA.', strategic: 'Fundação estrutural de dados limpos.', source: 'SES-GO', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80', imgCaption: '[Dashboard]' },
+    { year: 'Fase 2', title: 'Academia-Gov', metric: 'R$ 14.6M', desc: 'Aporte na UFG para validar biotecnologia local no SUS.', strategic: 'Pesquisa vira produto testado clinicamente.', source: 'Fapeg', image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=500&q=80', imgCaption: '[Pesquisa]' },
+    { year: 'Fase 3', title: 'HealthTechs', metric: '+29%', desc: 'Crescimento explosivo de startups fundindo Agro à Saúde.', strategic: 'Ecossistema apoiado por Venture Capital.', source: 'Hub Goiás', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32b7?auto=format&fit=crop&w=500&q=80', imgCaption: '[Ecossistema]' }
+  ];
+
+  return (
+    <div className="h-full flex flex-col flex-1 justify-center">
+      <div className="mb-4 lg:mb-8 shrink-0"><InteractiveHint text="Navegue pela linha" /></div>
+      <div className="relative mb-6 lg:mb-10 px-4 lg:px-10 shrink-0">
+        <div className="absolute top-1/2 left-4 right-4 lg:left-10 lg:right-10 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
+        <div className="absolute top-1/2 left-4 lg:left-10 h-1 bg-blue-600 -translate-y-1/2 z-0 transition-all duration-700" style={{ width: `${(activeStep / (timeline.length - 1)) * 100}%` }}></div>
+        <div className="relative z-10 flex justify-between">
+          {timeline.map((item, index) => (
+            <button key={index} onClick={() => setActiveStep(index)} className="flex flex-col items-center focus:outline-none relative w-16 lg:w-24">
+              <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-full border-[4px] lg:border-[5px] flex items-center justify-center transition-all duration-300 z-10 ${activeStep >= index ? 'border-blue-600 bg-white' : 'border-gray-300 bg-white'}`}>
+                {activeStep === index && <div className="w-2.5 h-2.5 lg:w-3.5 lg:h-3.5 bg-blue-600 rounded-full animate-pulse" />}
+              </div>
+              <div className={`mt-2 text-center text-[9px] lg:text-xs uppercase font-bold transition-colors ${activeStep === index ? 'text-blue-700' : 'text-gray-400'}`}>{item.year}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="bg-white border border-gray-200 rounded-3xl flex-1 flex flex-col sm:flex-row overflow-hidden shadow-lg min-h-[250px]">
+        <div className="flex-1 p-5 lg:p-8 flex flex-col justify-between overflow-y-auto custom-scrollbar">
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+               <div className="bg-blue-600 text-white px-3 py-1.5 rounded-lg font-black text-lg lg:text-xl shadow-inner">{timeline[activeStep].metric}</div>
+            </div>
+            <h3 className="text-xl lg:text-2xl font-black text-gray-900 mb-2">{timeline[activeStep].title}</h3>
+            <p className="text-xs lg:text-sm text-gray-700 leading-relaxed mb-4">{timeline[activeStep].desc}</p>
+            <div className="bg-blue-50 border-l-2 border-blue-600 p-2.5 rounded-r-lg mb-3">
+               <span className="block text-[9px] lg:text-[10px] font-bold uppercase tracking-widest text-blue-800 mb-1">Visão Estratégica</span>
+               <p className="text-xs text-blue-900 font-medium">{timeline[activeStep].strategic}</p>
+            </div>
+          </div>
+          <div className="shrink-0"><SourceBadge source={timeline[activeStep].source} /></div>
+        </div>
+        <div className="w-full sm:w-2/5 h-32 sm:h-auto bg-gray-100 hidden sm:flex flex-col shrink-0">
+           <img src={timeline[activeStep].image} alt={timeline[activeStep].imgCaption} className="w-full h-full object-cover" key={timeline[activeStep].image} />
+           <div className="bg-gray-900 text-gray-400 text-[9px] p-1.5 text-center italic">{timeline[activeStep].imgCaption}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+// --- APP PRINCIPAL INTEGRADO ---
+export default function CompletePresentation() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Usar funcões de renderização para garantir que objetos React 
+  // não sejam interpretados erroneamente no mapeamento e evitar montar os slides inativos prematuramente
+  const slides = [
+    {
+      id: "capa",
+      render: () => (
+        <SlideContainer>
+          <div className="flex flex-col justify-center h-full max-w-4xl relative z-10 py-10">
+            <div className="flex items-center gap-3 mb-6">
+              <Activity className="w-6 h-6 lg:w-8 lg:h-8 text-blue-600" />
+              <span className="text-blue-600 font-bold tracking-widest uppercase text-[10px] lg:text-sm border border-blue-200 px-3 py-1 rounded-full bg-blue-50">Dossiê 2025-2026</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-gray-900 leading-[1.1] mb-6 tracking-tight">
+              A Nova Fronteira da <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500 block sm:inline">Inovação em Saúde</span>
+            </h1>
+            <p className="text-base md:text-lg lg:text-2xl text-gray-600 font-light max-w-3xl leading-relaxed mb-10">
+              Uma visão executiva sobre a IA Médica, soluções clínicas disruptivas, o abismo de patentes e o <strong>despertar de Goiás como potência em saúde digital</strong>.
+            </p>
+            <div className="flex items-center gap-4 text-[10px] lg:text-xs font-bold text-gray-400 uppercase tracking-widest mt-auto shrink-0">
+              <div className="flex gap-2">
+                 <kbd className="px-2 py-1 bg-white border border-gray-300 rounded text-gray-600">←</kbd>
+                 <kbd className="px-2 py-1 bg-white border border-gray-300 rounded text-gray-600">→</kbd>
+              </div>
+              Navegue com botões ou teclado
+            </div>
+          </div>
+        </SlideContainer>
+      )
+    },
+    {
+      id: "contexto-global",
+      render: () => (
+        <SlideContainer>
+          <div className="flex justify-between items-end mb-4 shrink-0">
+            <h2 className="text-2xl lg:text-4xl font-black text-gray-900 flex items-center gap-2"><span className="text-blue-600">1.</span> A Inflexão Global</h2>
+            <BrainCircuit className="w-8 h-8 lg:w-12 lg:h-12 text-gray-300 hidden sm:block" />
+          </div>
+          <p className="text-sm lg:text-base text-gray-600 mb-6 max-w-4xl border-l-4 border-gray-200 pl-4 shrink-0">A IA transacionou de "custo experimental" para o centro da eficiência preditiva em triagem e genômica.</p>
+          <div className="flex flex-col md:flex-row gap-4 lg:gap-6 flex-1">
+            <InteractiveStatCard icon={TrendingUp} color="text-blue-600" bg="bg-blue-50" number="US$ 504 Bi" text="Mercado de IA na Saúde (2032)" insightDetail="O salto de US$ 39Bi (2025) é guiado pela descoberta algorítmica de fármacos." source="Grand View Research" />
+            <InteractiveStatCard icon={Globe2} color="text-emerald-600" bg="bg-emerald-50" number="49%" text="Domínio da América do Norte" insightDetail="Concentração gerada por alianças entre Big Techs e Hospitais para treinar modelos fundacionais." source="MarketWatch" />
+            <div className="p-5 lg:p-6 rounded-2xl bg-gray-900 text-white flex flex-col justify-between border border-gray-800 flex-1 min-h-[200px]">
+              <div>
+                <h3 className="text-lg lg:text-xl font-bold mb-2 text-amber-400">"Inovação Reversa"</h3>
+                <p className="text-gray-300 text-xs lg:text-sm leading-relaxed mb-3">Soluções frugais criadas na África invadem hospitais americanos para cortar custos básicos.</p>
+              </div>
+              <SourceBadge source="Fórum Econômico Mundial" />
+            </div>
+          </div>
+        </SlideContainer>
+      )
+    },
+    { id: "grafico-patentes", headerTitle: "Corrida Estratégica", headerIcon: BarChart3, render: () => <SlideContainer><InteractiveBarChart /></SlideContainer> },
+    { id: "grafico-hospitais", headerTitle: "Vanguarda Hospitalar", headerIcon: Trophy, render: () => <SlideContainer><RankingHospitals /></SlideContainer> },
+    { id: "grafico-disruptivas", headerTitle: "Fronteiras da Medicina: Inovações Disruptivas", headerIcon: Syringe, render: () => <SlideContainer bg="bg-gray-900"><DisruptiveInnovations /></SlideContainer> },
+    { id: "grafico-solucoes", headerTitle: "Soluções e Pesquisa Aplicada", headerIcon: TestTube2, render: () => <SlideContainer><GlobalSolutionsCenters /></SlideContainer> },
+    { id: "grafico-brasil", headerTitle: "Raio-X Brasil", headerIcon: PieChart, render: () => <SlideContainer><BrazilianPatentsParadox /></SlideContainer> },
+    {
+      id: "contexto-goias-1",
+      render: () => (
+        <SlideContainer>
+          <div className="flex justify-between items-end mb-4 shrink-0">
+            <h2 className="text-2xl lg:text-4xl font-black text-gray-900 flex items-center gap-2"><span className="text-blue-600">2.</span> A Singularidade Goiana</h2>
+            <Lightbulb className="w-8 h-8 lg:w-12 lg:h-12 text-gray-300 hidden sm:block" />
+          </div>
+          <p className="text-sm lg:text-base text-gray-600 mb-6 max-w-4xl border-l-4 border-gray-200 pl-4 shrink-0">Emprestando a expertise científica do agronegócio, Goiás moldou um ambiente fértil para a biotecnologia humana (HealthTechs).</p>
+          <div className="flex flex-col md:flex-row gap-4 lg:gap-6 flex-1">
+            <InteractiveStatCard icon={Activity} color="text-gray-900" bg="bg-white border-2 border-black" number="+29%" text="Novas Startups" insightDetail="A transição de Agro para Saúde cria o ecossistema bioeconômico ideal no estado." source="Mapeamento Startups GO" />
+            <InteractiveStatCard icon={Target} color="text-white" bg="bg-blue-600 border-2 border-black" number="R$ 30M" text="Hub Goiás" insightDetail="Injeção de capital direto do governo para validação e escala comercial." source="Secti-GO" />
+            <div className="bg-emerald-50 border-2 border-emerald-600 rounded-2xl p-5 lg:p-6 flex flex-col justify-between flex-1 min-h-[200px]">
+              <div>
+                <div className="inline-block px-2 py-1 bg-emerald-600 text-white rounded text-[10px] font-bold uppercase mb-2">Validação Global</div>
+                <h4 className="text-xl font-black mb-2 text-emerald-900">Case Fitoprot</h4>
+                <p className="text-emerald-800 text-xs lg:text-sm leading-relaxed mb-3">Patentes da UFG validaram viabilidade comercial vencendo prêmios massivos.</p>
+                <SourceBadge source="Parque Tecnológico Samambaia" />
+              </div>
+            </div>
+          </div>
+        </SlideContainer>
+      )
+    },
+    { id: "grafico-goias-timeline", headerTitle: "O Salto de Goiás", headerIcon: TrendingUp, render: () => <SlideContainer><GoiasTrend /></SlideContainer> },
+    {
+      id: "contexto-goias-2",
+      render: () => (
+        <SlideContainer>
+          <div className="flex justify-between items-end mb-4 shrink-0">
+             <h2 className="text-2xl lg:text-4xl font-black text-gray-900 flex items-center gap-2"><span className="text-blue-600">3.</span> A Máquina Física e Digital</h2>
+             <Server className="w-8 h-8 lg:w-12 lg:h-12 text-gray-300 hidden sm:block" />
+          </div>
+          <p className="text-sm lg:text-base text-gray-600 mb-6 border-l-4 border-gray-200 pl-4 shrink-0">Goiás planejou a integração das duas matrizes operacionais (Soft/Hard) para inovações vitais.</p>
+
+          <div className="flex flex-col md:flex-row gap-6 lg:gap-8 flex-1">
+            <div className="flex-1 flex flex-col gap-3 lg:gap-4">
+              <div className="text-gray-800 font-bold uppercase text-[10px] lg:text-xs bg-gray-100 px-3 py-1 w-max rounded-md flex items-center gap-1.5"><Activity className="w-3 h-3"/> Digital & Clínico</div>
+              <div className="p-4 lg:p-5 bg-gray-900 text-white rounded-2xl shadow-md border-l-4 border-blue-500">
+                <h4 className="font-bold text-base lg:text-lg mb-1 text-blue-400">FHIR®️ no SUS</h4>
+                <p className="text-gray-300 text-xs lg:text-sm mb-2">O histórico viaja de maneira segura até a triagem algorítmica.</p>
+              </div>
+              <div className="p-4 lg:p-5 bg-white border border-gray-200 rounded-2xl shadow-sm flex-1">
+                <h4 className="font-bold text-base lg:text-lg mb-1 text-gray-900">Hospital das Clínicas</h4>
+                <p className="text-gray-600 text-xs lg:text-sm">"Laboratório vivo" para testar inovações do Ceti-Saúde.</p>
+              </div>
+            </div>
+
+            <div className="flex-1 bg-blue-50 rounded-3xl p-5 lg:p-8 border border-blue-100 flex flex-col relative overflow-hidden">
+               <div className="text-blue-900 font-bold uppercase text-[10px] lg:text-xs bg-white/50 px-3 py-1 w-max rounded-md flex items-center gap-1.5 mb-4 relative z-10"><PlaneTakeoff className="w-3 h-3"/> Infra / Smart Cities</div>
+              <div className="mb-4 relative z-10 bg-white/70 p-3 rounded-xl">
+                <h4 className="font-black text-sm lg:text-lg text-gray-900 mb-1">Antares Polo Aeronáutico</h4>
+                <p className="text-gray-700 text-[10px] lg:text-xs">Ponte para genômica e UTI aérea.</p>
+              </div>
+              <div className="relative z-10 bg-white/70 p-3 rounded-xl">
+                <h4 className="font-black text-sm lg:text-lg text-gray-900 mb-1">Inova Aparecida</h4>
+                <p className="text-gray-700 text-[10px] lg:text-xs">Complexo para hospedar farmacêuticas.</p>
+              </div>
+              <Building2 className="w-48 h-48 lg:w-80 lg:h-80 absolute -bottom-10 -right-10 text-blue-200 opacity-30 z-0" />
+            </div>
+          </div>
+        </SlideContainer>
+      )
+    }
+  ];
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+  const prevSlide = () => setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  return (
+    <div className="w-full min-h-screen bg-gray-200 flex items-center justify-center p-2 sm:p-4 lg:p-6" style={fontStyle}>
+      <style>{`
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(156, 163, 175, 0.5); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: rgba(107, 114, 128, 0.8); }
+        .mask-image-b-gradient { mask-image: linear-gradient(to bottom, black 0%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%); }
+      `}</style>
+
+      <div className="relative w-full max-w-7xl h-[90vh] min-h-[600px] bg-white shadow-2xl rounded-2xl sm:rounded-3xl flex flex-col overflow-hidden border border-gray-300">
+        
+        <div className={`px-4 lg:px-8 py-3 lg:py-4 border-b border-gray-100 flex justify-between items-center bg-white z-20 shadow-sm shrink-0 transition-all duration-300 ${slides[currentSlide].headerTitle ? 'h-auto opacity-100' : 'h-0 opacity-0 overflow-hidden py-0 border-transparent'}`}>
+           {slides[currentSlide].headerTitle && (
+             <>
+               <div className="flex items-center gap-2 lg:gap-4">
+                  <div className="p-1.5 lg:p-2 bg-blue-50 border border-blue-100 rounded-lg shadow-inner">
+                    {React.createElement(slides[currentSlide].headerIcon, { className: "w-4 h-4 lg:w-5 lg:h-5 text-blue-600" })}
+                  </div>
+                  <h2 className="text-sm sm:text-base lg:text-xl font-black text-gray-900 tracking-tight uppercase truncate">{slides[currentSlide].headerTitle}</h2>
+               </div>
+               <div className="text-[9px] lg:text-[10px] font-bold text-gray-500 bg-gray-100 px-2 lg:px-3 py-1 lg:py-1.5 rounded-full uppercase tracking-wider hidden sm:flex items-center gap-1.5 shrink-0">
+                  <Activity className="w-3 h-3" /> Painel {currentSlide + 1}/{slides.length}
+               </div>
+             </>
+           )}
+        </div>
+
+        <div className="flex-1 relative bg-white overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full flex transition-transform duration-[600ms] ease-[cubic-bezier(0.645,0.045,0.355,1)]" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+            {slides.map((slide) => (
+              <div key={slide.id} className="min-w-full h-full">
+                {/* Executa a função render() do slide em vez de interpolação direta para prevenir erros do React */}
+                {slide.render()}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-gray-50 border-t border-gray-200 p-3 lg:p-4 flex justify-between items-center px-4 lg:px-8 z-20 shrink-0">
+          <div className="flex items-center gap-4 lg:gap-6">
+            <Zap className="w-4 h-4 lg:w-5 lg:h-5 text-amber-500" />
+            <div className="flex gap-1.5 lg:gap-2">
+              {slides.map((_, i) => (
+                <button 
+                  key={i} onClick={() => setCurrentSlide(i)} aria-label={`Slide ${i + 1}`}
+                  className={`h-1.5 lg:h-2 transition-all duration-300 rounded-full ${currentSlide === i ? 'w-6 lg:w-8 bg-black shadow-md' : 'w-1.5 lg:w-2 bg-gray-300 hover:bg-gray-500'}`}
+                />
+              ))}
+            </div>
+          </div>
+          
+          <div className="flex gap-2 lg:gap-3">
+            <button onClick={prevSlide} className="px-3 lg:px-5 py-1.5 lg:py-2 flex items-center gap-1 lg:gap-2 rounded-full font-bold text-xs lg:text-sm bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors shadow-sm">
+              <ChevronLeft className="w-3 h-3 lg:w-4 lg:h-4" /> <span className="hidden sm:inline">Voltar</span>
+            </button>
+            <button onClick={nextSlide} className="px-3 lg:px-5 py-1.5 lg:py-2 flex items-center gap-1 lg:gap-2 rounded-full font-bold text-xs lg:text-sm bg-black text-white hover:bg-gray-800 transition-colors shadow-md">
+              <span className="hidden sm:inline">Avançar</span> <ChevronRight className="w-3 h-3 lg:w-4 lg:h-4" />
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
